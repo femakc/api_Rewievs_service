@@ -7,6 +7,7 @@ from users.models import CustomUser
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    """ Обработчик запросов к модели CustomUser """
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     #permission_classes = [permissions.IsAuthenticated, IsOwnerOrAuthenticated]
