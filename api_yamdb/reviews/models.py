@@ -1,6 +1,6 @@
 from django.db import models
 
-from api_yamdb.users.models import CustomUser
+from users.models import CustomUser
 
 
 class Category(models.Model):
@@ -22,7 +22,7 @@ class Title(models.Model):
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
     category = models.OneToOneField(
         Category, on_delete=models.PROTECT,
-        related_name="posts", blank=True, null=True
+        blank=True, null=True
     )
     genre = models.ForeignKey(
         Genre, on_delete=models.SET_NULL,
