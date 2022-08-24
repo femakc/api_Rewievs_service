@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
-from reviews.models import Title, Genre, Category, User
+from reviews.models import Title, Genre, Category
 from users.models import CustomUser
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
     """ Сериализатор модели CustomUser """
     class Meta:
-        model = User
+        model = CustomUser
         fields = '__all__'
 
 class TitleSerializer(serializers.ModelSerializer):
