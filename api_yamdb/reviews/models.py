@@ -20,11 +20,8 @@ class Title(models.Model):
     author = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name='titles')
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
-    category = models.OneToOneField(
+    category = models.ForeignKey(
         Category, on_delete=models.PROTECT,
         blank=True, null=True
     )
-    genre = models.ForeignKey(
-        Genre, on_delete=models.SET_NULL,
-        related_name="posts", blank=True, null=True
-    )
+    genre = models.ManyToManyField(Genre)
