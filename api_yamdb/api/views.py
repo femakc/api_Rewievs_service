@@ -1,5 +1,4 @@
-from rest_framework import permissions, viewsets
-
+from rest_framework import filters, mixins, viewsets
 from api.serializers import CustomUserSerializer, TitleSerializer, \
     GenreSerializer, CategorySerializer
 from reviews.models import Title, Genre, Category
@@ -29,6 +28,8 @@ class TitleViewSet(viewsets.ModelViewSet):
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
