@@ -15,12 +15,17 @@ class Genre(models.Model):
     description = models.TextField()
 
 
+class Review(models.Model):
+    pass
+
+
 class Title(models.Model):
     name = models.CharField('Название', max_length=200)
     author = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name='titles')
     year = models.IntegerField(default=2000)
-    rating = models.ManyToManyField(Review, related_name='film_rating')
+    rating = models.ManyToManyField(Review, on_delete=models.SET_NULL,
+                                    related_name='film_rating')
     description = models.TextField(default='')
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, related_name='categories',
