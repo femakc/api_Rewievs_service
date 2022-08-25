@@ -9,6 +9,7 @@ CHOICES = (
     ('superuser', 'Суперюзер Django'),
 )
 
+
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=100, unique=True)
     first_name = models.CharField(max_length=100)
@@ -22,4 +23,3 @@ class CustomUser(AbstractUser):
         choices=CHOICES,
         default='user'
     )
-
