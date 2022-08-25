@@ -9,17 +9,15 @@ CHOICES = (
     ('superuser', 'Суперюзер Django'),
 )
 
+
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=100, unique=True)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+    # email = models.EmailField(unique=True)
     confirm_code = models.CharField(max_length=6)
-    bio = models.TextField('Биография', default='')
+    bio = models.TextField('Биография', default='', blank=True, null=True,)
     role = models.CharField(
         'Роль пользователя',
         max_length=32,
         choices=CHOICES,
         default='user'
     )
-
