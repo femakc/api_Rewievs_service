@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
+from reviews.models import Title, Genre, Category
 from users.models import CustomUser
 
 from rest_framework_simplejwt.tokens import AccessToken
@@ -17,23 +18,36 @@ class SignUpSerializer(serializers.ModelSerializer):
         fields = (
             'username',
             'email',
-            'confirm_code',
+            'first_name',
+            'last_name',
+            'bio',
+            'role'
         )
-        validators = [
-            UniqueTogetherValidator(
-                queryset=CustomUser.objects.all(),
-                fields=('username', 'email'),
-                message='Имя пользователя или email уже используются'
-            )
-        ]
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     """ Сериализаторор для модели Post."""
+class TitleSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(read_only=True,
+                                          slug_field='username')
 
-#     class Meta:
-#         model = CustomUser
-#         fields = ('__all__')
+
+
+    class Meta:
+        fields = '__all__'
+        model = Title
+
+
+class GenreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = '__all__'
+        model = Genre
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = '__all__'
+        model = Category
 
 class GetTokenSerializer(serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD
