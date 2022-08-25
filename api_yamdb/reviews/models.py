@@ -1,4 +1,5 @@
 from django.db import models
+
 from users.models import CustomUser
 
 
@@ -35,7 +36,9 @@ class Review(models.Model):
         verbose_name='Дата создания отзыва')
 
     def __str__(self):
-        return self.text
+        # return self.text
+        return (f'{self.author.username}, {self.text}, {self.score}')
+
 
 class Comment(models.Model):
     """Комментарии пользователя на отзыв."""
@@ -54,4 +57,5 @@ class Comment(models.Model):
         verbose_name='Дата создания комментария')
     
     def __str__(self):
-        return self.text
+        # return self.text
+        return (f'{self.author.username}, {self.text}')

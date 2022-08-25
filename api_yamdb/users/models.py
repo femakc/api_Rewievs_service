@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 CHOICES = (
     ('anon', 'Аноним'),
@@ -8,6 +8,7 @@ CHOICES = (
     ('admin', 'Администратор'),
     ('superuser', 'Суперюзер Django'),
 )
+
 
 class CustomUser(AbstractUser):
     
@@ -19,4 +20,3 @@ class CustomUser(AbstractUser):
         choices=CHOICES,
         default='user'
     )
-
