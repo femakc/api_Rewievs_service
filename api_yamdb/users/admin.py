@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from .models import CustomUser
 
+
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -13,7 +14,8 @@ class CustomUserAdmin(UserAdmin):
         'first_name',
         'last_name',
         'bio',
-        'role'
+        'role',
+        'confirm_code',
     ]
     add_fieldsets =(
         *UserAdmin.add_fieldsets,
@@ -26,6 +28,7 @@ class CustomUserAdmin(UserAdmin):
                     'last_name',
                     'bio',
                     'role',
+                    # 'confirm_code',
                 )
             }
         )
@@ -39,6 +42,7 @@ class CustomUserAdmin(UserAdmin):
                 'fields': (
                     'bio',
                     'role',
+                    # 'confirm_code',
                 )
             }
         )
