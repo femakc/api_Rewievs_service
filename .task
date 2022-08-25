@@ -1,0 +1,15 @@
+endpoints: 
+/api/v1/auth/signup/ - POST     (email и username)
+response - отправка email письма с confirm_code
+
+/api/v1/auth/token/ - POST  (username и confirmation_code)
+response - получение токена
+
+/api/v1/users/me/ PATH (с токеном пользователя и полями из документации)
+response изменение полей
+
+api/v1/users/  POST (токен админа  email и username)
+
+
+
+admin token "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYxNTI0MTMyLCJpYXQiOjE2NjE0Mzc3MzIsImp0aSI6IjExYWViZDQ1OWY2YjRkYmI4N2NmMTE5YjY1ZDQ4NDExIiwidXNlcl9pZCI6MX0.CqZ_uFxFEbK_FryETPSSjqrVDr471mPw8n7B87dnsts"
