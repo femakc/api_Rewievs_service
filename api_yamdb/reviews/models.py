@@ -86,7 +86,6 @@ class Genre(models.Model):
     description = models.TextField()
 
 
-
 class Title(models.Model):
     name = models.CharField('Название', max_length=200)
     author = models.ForeignKey(
