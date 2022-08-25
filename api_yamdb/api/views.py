@@ -1,27 +1,20 @@
 import random
 
+from api.serializers import (CategorySerializer, CommentSerializer,
+                             CustomUserSerializer, GenreSerializer,
+                             ReviewSerializer, TitleSerializer)
 from django.core.mail import send_mail
-from rest_framework import status, viewsets
+from django.shortcuts import get_object_or_404
+from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.mixins import CreateModelMixin
-from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-
-from .serializers import SignUpSerializer, GetTokenSerializer
+from rest_framework.response import Response
+from rest_framework_simplejwt import views
+from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import CustomUser
 
-from rest_framework_simplejwt import views
+from .serializers import GetTokenSerializer, SignUpSerializer
 
-from rest_framework import filters, mixins, viewsets
-from api.serializers import CustomUserSerializer, TitleSerializer, \
-    GenreSerializer, CategorySerializer
-from reviews.models import Title, Genre, Category
-
-from django.shortcuts import get_object_or_404
-from rest_framework import permissions, viewsets
-
-from api.serializers import (CommentSerializer, CustomUserSerializer,
-                             ReviewSerializer)
-from reviews.models import Comment, Review, Title
 
 class SignUpViewSet(CreateModelMixin, viewsets.GenericViewSet):
     """ Обработчик запросов к модели CustomUser при регистрации """
