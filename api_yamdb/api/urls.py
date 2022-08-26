@@ -15,7 +15,7 @@ router.register(r'api/v1/auth/signup', SignUpViewSet, basename='signupusers')
 urlpatterns = [
     path('', include(router.urls)),
     path(
-        'api/v1/users/',
+        'api/v1/auth/token/',
         GetTokenView.as_view(),
         name='users'
     ),
