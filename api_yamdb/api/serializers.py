@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 from rest_framework import serializers
 
 from reviews.models import Title, Genre, Category
@@ -10,9 +12,15 @@ class CustomUserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = '__all__'
 
+
 class TitleSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(read_only=True,
-                                          slug_field='username')
+
+    def validate(self, value):
+        now = timezone.now().year
+        if value > now:
+            raise ValidationError(
+                f'год выпуска {value} не может быть больше настоящего {now}'
+            )
 
     class Meta:
         fields = '__all__'
@@ -25,6 +33,7 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Genre
         lookup_field = 'slug'
+
 
 class CategorySerializer(serializers.ModelSerializer):
 
