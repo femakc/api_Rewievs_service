@@ -24,7 +24,7 @@ class User(AbstractUser):
     def __str__(self):
         return str(self.username)
 
-    # @property   
+    # @property
     # def is_staff(self):
 
     #     # Is the user a member of staff?"

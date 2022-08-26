@@ -17,7 +17,7 @@ class UserAdmin(UserAdmin):
         'role',
         'confirmation_code',
     ]
-    add_fieldsets =(
+    add_fieldsets = (
         *UserAdmin.add_fieldsets,
         (
             'Custom fields',
@@ -34,7 +34,7 @@ class UserAdmin(UserAdmin):
         )
     )
 
-    fieldsets =(
+    fieldsets = (
         *UserAdmin.fieldsets,
         (
             'Custom fields',

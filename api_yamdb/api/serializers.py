@@ -4,7 +4,7 @@ from rest_framework.validators import UniqueTogetherValidator
 from users.models import User
 
 from rest_framework_simplejwt.tokens import AccessToken
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import get_user_model
 from collections import OrderedDict
 
 # from api_yamdb.settings import api_settings
@@ -34,7 +34,14 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'role')
+        fields = (
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'bio',
+            'role'
+        )
 
 
 class GetTokenSerializer(serializers.Serializer):
@@ -71,7 +78,7 @@ class GetTokenSerializer(serializers.Serializer):
                 self.error_messages["no_active_account"],
                 "no_active_account",
             )
-        
+
         authenticate_kwargs = {
             self.username_field: attrs[self.username_field],
             "confirmation_code": attrs["confirmation_code"],
