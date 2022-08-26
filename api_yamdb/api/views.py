@@ -74,14 +74,13 @@ class GenreViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
 
-
     # def perform_create(self, serializer):
     #     serializer.save(author=self.request.user)
 
     def perform_create(self, serializer):
         review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
         serializer.save(author=self.request.user, review_id=review.id)
->>>>>>> feature/review/comments
+# >>>>>>> feature/review/comments
 
 
 
