@@ -14,8 +14,6 @@ class TitleSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(read_only=True,
                                           slug_field='username')
 
-
-
     class Meta:
         fields = '__all__'
         model = Title
@@ -26,11 +24,11 @@ class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Genre
-
+        lookup_field = 'slug'
 
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = '__all__'
         model = Category
-
+        lookup_field = 'slug'
