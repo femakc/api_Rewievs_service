@@ -23,8 +23,10 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class TitleFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr='iexact')
-    genre = django_filters.CharFilter('genre__slug')
+    name = django_filters.CharFilter(field_name='name')
+    genre = django_filters.CharFilter(field_name='genre__slug')
+    category = django_filters.CharFilter(field_name='category__slug')
+    year = django_filters.NumberFilter(field_name='year')
 
     class Meta:
         model = Title
@@ -34,6 +36,7 @@ class TitleFilter(django_filters.FilterSet):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     filter_backends = (DjangoFilterBackend,)
+    filterset_class = TitleFilter
 
     def get_serializer_class(self):
         if self.action in ('retrieve', 'list',):
