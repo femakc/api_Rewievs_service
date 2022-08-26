@@ -42,7 +42,7 @@ class CustomUserAdmin(UserAdmin):
                 'fields': (
                     'bio',
                     'role',
-                    # 'confirm_code',
+                    'confirm_code',
                 )
             }
         )

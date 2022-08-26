@@ -20,3 +20,13 @@ class CustomUser(AbstractUser):
         choices=CHOICES,
         default='user'
     )
+
+    def __str__(self):
+        return str(self.username)
+
+    # @property   
+    # def is_staff(self):
+
+    #     # Is the user a member of staff?"
+    #     # Simplest possible answer: All admins are staff
+    #     return self.is_admin

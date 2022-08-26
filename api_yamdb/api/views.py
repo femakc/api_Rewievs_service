@@ -4,9 +4,9 @@ from django.core.mail import send_mail
 from rest_framework import status, viewsets
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 
-from .serializers import SignUpSerializer, GetTokenSerializer
+from .serializers import SignUpSerializer, GetTokenSerializer, UserSerializer
 from users.models import CustomUser
 
 from rest_framework_simplejwt import views
@@ -55,3 +55,12 @@ class SignUpViewSet(CreateModelMixin, viewsets.GenericViewSet):
 
 class GetTokenView(views.TokenObtainSlidingView):
     serializer_class = GetTokenSerializer
+
+
+class UserVievSet(viewsets.ModelViewSet):
+    """Обработчик запросов к модели CustomUser."""
+
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAdminUser,)
+    # pagination_class = LimitOffsetPagination

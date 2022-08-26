@@ -1,14 +1,17 @@
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from rest_framework.validators import UniqueTogetherValidator
 
 from users.models import CustomUser
 
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth import authenticate, get_user_model
+from collections import OrderedDict
+
+# from api_yamdb.settings import api_settings
 
 
 class SignUpSerializer(serializers.ModelSerializer):
-    """ Сериализатор модели CustomUser """
+    """ Сериализатор для SignUp """
 
     class Meta:
         model = CustomUser
@@ -26,19 +29,22 @@ class SignUpSerializer(serializers.ModelSerializer):
         ]
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     """ Сериализаторор для модели Post."""
+class UserSerializer(serializers.ModelSerializer):
+    """ Сериализаторор для модели CustomUser."""
 
-#     class Meta:
-#         model = CustomUser
-#         fields = ('__all__')
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'role')
+
 
 class GetTokenSerializer(serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD
     token_class = AccessToken
 
     default_error_messages = {
-        "no_active_account": ("No active account found with the given credentials")
+        "no_active_account": (
+            "No active account found with the given credentials"
+        )
     }
 
     def __init__(self, *args, **kwargs):
@@ -56,6 +62,15 @@ class GetTokenSerializer(serializers.Serializer):
         print(user)
         confirm_code = user.confirm_code
         print(confirm_code)
+        token = self.get_token(user)
+        data = OrderedDict()
+        data["token"] = str(token)
+
+        if confirmation_code != confirm_code:
+            raise exceptions.AuthenticationFailed(
+                self.error_messages["no_active_account"],
+                "no_active_account",
+            )
         
         authenticate_kwargs = {
             self.username_field: attrs[self.username_field],
@@ -66,15 +81,7 @@ class GetTokenSerializer(serializers.Serializer):
         except KeyError:
             pass
 
-        self.user = authenticate(**authenticate_kwargs)
-
-        # if not api_settings.USER_AUTHENTICATION_RULE(self.user):
-        #     raise exceptions.AuthenticationFailed(
-        #         self.error_messages["no_active_account"],
-        #         "no_active_account",
-        #     )
-
-        return {}
+        return data
 
     @classmethod
     def get_token(cls, user):
