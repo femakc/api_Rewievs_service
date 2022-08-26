@@ -21,8 +21,6 @@ class Review(models.Model):
 
 class Title(models.Model):
     name = models.CharField('Название', max_length=200)
-    author = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name='titles')
     year = models.IntegerField(default=2000)
     description = models.TextField(default='')
     category = models.ForeignKey(

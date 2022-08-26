@@ -30,7 +30,7 @@ class TitleFilter(django_filters.FilterSet):
 
     class Meta:
         model = Title
-        fields = ['price', 'release_date']
+        fields = ['name', 'genre', 'category', 'year']
 
 
 class TitleViewSet(viewsets.ModelViewSet):
