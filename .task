@@ -1,0 +1,23 @@
+1. Если админ зарегестрировал пользователя , не могу послать пост запрос на signup ( такой пользователь уже есть !!!)
+Копипаста от Никиты 
+def post(self, request):
+        email = request.data.get('email')
+        username = request.data.get('username')
+        is_registered = User.objects.filter(
+            email=email, username=username)
+        if not is_registered.exists():
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            self.send_code(username)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            self.send_code(username)
+            response = {
+                'error': 'Пользователь уже зарегистрирован в системе!'
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+            
+
+

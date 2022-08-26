@@ -18,15 +18,27 @@ class SignUpSerializer(serializers.ModelSerializer):
         fields = (
             'username',
             'email',
-            'confirm_code',
+            'confirmation_code',
         )
-        validators = [
-            UniqueTogetherValidator(
-                queryset=User.objects.all(),
-                fields=('username', 'email'),
-                message='Имя пользователя или email уже используются'
-            )
-        ]
+        # validators = [
+        #     UniqueTogetherValidator(
+        #         queryset=User.objects.all(),
+        #         fields=('username', 'email'),
+        #         message='Имя пользователя или email уже используются'
+        #     )
+        # ]
+
+    # def validate(self, attrs):
+    #     return super().validate(attrs)
+
+    # def validate(self, data):
+    #     print(data)
+    #     user = User.objects.filter(username=data.username, email=data.email)
+    #     print(user)
+    #     if not user:
+    #         raise serializers.ValidationError("Тарам пам пам")
+
+    #     return data
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -42,6 +54,16 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
+        validators = [
+            UniqueTogetherValidator(
+                queryset=User.objects.all(),
+                fields=('username', 'email'),
+                message='Имя пользователя или email уже используются'
+            )
+        ]
+
+    def create(self, validated_data):
+        return super().create(validated_data)
 
 
 class GetTokenSerializer(serializers.Serializer):
@@ -67,7 +89,7 @@ class GetTokenSerializer(serializers.Serializer):
         print(username, confirmation_code)
         user = User.objects.get(username=username)
         print(user)
-        confirm_code = user.confirm_code
+        confirm_code = user.confirmation_code # надо поправит 
         print(confirm_code)
         token = self.get_token(user)
         data = OrderedDict()
