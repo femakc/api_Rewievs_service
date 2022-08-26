@@ -10,9 +10,9 @@ CHOICES = (
 )
 
 
-class CustomUser(AbstractUser):
+class User(AbstractUser):
     username = models.CharField(max_length=100, unique=True)
-    confirm_code = models.CharField(max_length=6)
+    confirmation_code = models.CharField(max_length=32)
     bio = models.TextField('Биография', default='', blank=True, null=True,)
     role = models.CharField(
         'Роль пользователя',

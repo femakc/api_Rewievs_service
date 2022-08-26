@@ -7,14 +7,14 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAdminUser
 
 from .serializers import SignUpSerializer, GetTokenSerializer, UserSerializer
-from users.models import CustomUser
-
+from users.models import User
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework_simplejwt import views
 
 
 class SignUpViewSet(CreateModelMixin, viewsets.GenericViewSet):
-    """ Обработчик запросов к модели CustomUser при регистрации """
-    queryset = CustomUser.objects.all()
+    """ Обработчик запросов к модели User при регистрации """
+    queryset = User.objects.all()
     serializer_class = SignUpSerializer
     permission_classes = (AllowAny,)
 
@@ -58,9 +58,9 @@ class GetTokenView(views.TokenObtainSlidingView):
 
 
 class UserVievSet(viewsets.ModelViewSet):
-    """Обработчик запросов к модели CustomUser."""
+    """Обработчик запросов к модели User."""
 
-    queryset = CustomUser.objects.all()
+    queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAdminUser,)
-    # pagination_class = LimitOffsetPagination
+    pagination_class = LimitOffsetPagination

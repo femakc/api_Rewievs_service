@@ -1,7 +1,7 @@
 from rest_framework import serializers, exceptions
 from rest_framework.validators import UniqueTogetherValidator
 
-from users.models import CustomUser
+from users.models import User
 
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth import authenticate, get_user_model
@@ -14,7 +14,7 @@ class SignUpSerializer(serializers.ModelSerializer):
     """ Сериализатор для SignUp """
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = (
             'username',
             'email',
@@ -22,7 +22,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         )
         validators = [
             UniqueTogetherValidator(
-                queryset=CustomUser.objects.all(),
+                queryset=User.objects.all(),
                 fields=('username', 'email'),
                 message='Имя пользователя или email уже используются'
             )
@@ -30,10 +30,10 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """ Сериализаторор для модели CustomUser."""
+    """ Сериализаторор для модели User."""
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'role')
 
 
@@ -58,7 +58,7 @@ class GetTokenSerializer(serializers.Serializer):
         username = attrs.get('username')
         confirmation_code = attrs.get('confirmation_code')
         print(username, confirmation_code)
-        user = CustomUser.objects.get(username=username)
+        user = User.objects.get(username=username)
         print(user)
         confirm_code = user.confirm_code
         print(confirm_code)
