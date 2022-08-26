@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from rest_framework import serializers
 
-from reviews.models import Title, Genre, Category
+from reviews.models import Category, Genre, Title
 from users.models import CustomUser
 
 
