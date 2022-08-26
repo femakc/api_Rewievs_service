@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-from rest_framework_simplejwt.tokens import AccessToken
+# from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Comment, Genre, Review, Title
 # from reviews.models import Title, Genre, Category
 from users.models import CustomUser
