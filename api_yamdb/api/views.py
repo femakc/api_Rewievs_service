@@ -9,6 +9,8 @@ from api.serializers import CustomUserSerializer, \
 from reviews.models import Title, Genre, Category
 from users.models import CustomUser
 
+# from .permissions import IsOwnerOrAuthenticated
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """ Обработчик запросов к модели CustomUser """
@@ -20,11 +22,7 @@ class UserViewSet(viewsets.ModelViewSet):
     #     serializer.save(author=self.request.user)
 
 
-class TitleViewSet(mixins.CreateModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.ListModelMixin,
-                   mixins.DestroyModelMixin,
-                   viewsets.GenericViewSet):
+class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
 
     def get_serializer_class(self):
