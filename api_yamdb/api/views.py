@@ -9,8 +9,6 @@ from api.serializers import (CategorySerializer, CustomUserSerializer,
 from reviews.models import Category, Genre, Title
 from users.models import CustomUser
 
-# from .permissions import IsOwnerOrAuthenticated
-
 
 class UserViewSet(viewsets.ModelViewSet):
     """ Обработчик запросов к модели CustomUser """

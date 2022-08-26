@@ -50,12 +50,12 @@ class TitleWriteSerializer(serializers.ModelSerializer):
         many=True
     )
 
-    def validate(self, value):
-        now = timezone.now().year
-        if value > now:
-            raise ValidationError(
-                f'год выпуска {value} не может быть больше настоящего {now}'
-             )
+    #def validate(self, value):
+    #    now = timezone.now().year
+    #    if value > now:
+    #        raise ValidationError(
+    #            f'год выпуска {value} не может быть больше настоящего {now}'
+    #         )
 
     class Meta:
         fields = '__all__'
