@@ -13,20 +13,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class TitleSerializer(serializers.ModelSerializer):
-#
-#     def validate(self, value):
-#         now = timezone.now().year
-#         if value > now:
-#             raise ValidationError(
-#                 f'год выпуска {value} не может быть больше настоящего {now}'
-#             )
-#
-#     class Meta:
-#         fields = '__all__'
-#         model = Title
-
-
 class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -63,6 +49,13 @@ class TitleWriteSerializer(serializers.ModelSerializer):
         slug_field='slug',
         many=True
     )
+
+    def validate(self, value):
+        now = timezone.now().year
+        if value > now:
+            raise ValidationError(
+                f'год выпуска {value} не может быть больше настоящего {now}'
+             )
 
     class Meta:
         fields = '__all__'
