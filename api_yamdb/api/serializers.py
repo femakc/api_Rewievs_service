@@ -6,8 +6,6 @@ from users.models import CustomUser
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth import authenticate, get_user_model
 
-from users.models import CustomUser 
-
 
 class SignUpSerializer(serializers.ModelSerializer):
     """ Сериализатор модели CustomUser """
@@ -50,25 +48,25 @@ class GetTokenSerializer(serializers.Serializer):
         self.fields["confirmation_code"] = serializers.CharField()
 
     def validate(self, attrs):
-        # print(attrs)
+        print(attrs)
         username = attrs.get('username')
-        print(username)
-        user = CustomUser.objects.filter(username=username)
+        confirmation_code = attrs.get('confirmation_code')
+        print(username, confirmation_code)
+        user = CustomUser.objects.get(username=username)
         print(user)
-        confirmation_code = user.get('confirm_code')
-        print(confirmation_code)
+        confirm_code = user.confirm_code
+        print(confirm_code)
         
-        
-        # authenticate_kwargs = {
-        #     self.username_field: attrs[self.username_field],
-        #     "confirm_code": attrs["confirm_code"],
-        # }
-        # try:
-        #     authenticate_kwargs["request"] = self.context["request"]
-        # except KeyError:
-        #     pass
+        authenticate_kwargs = {
+            self.username_field: attrs[self.username_field],
+            "confirmation_code": attrs["confirmation_code"],
+        }
+        try:
+            authenticate_kwargs["request"] = self.context["request"]
+        except KeyError:
+            pass
 
-        # self.user = authenticate(**authenticate_kwargs)
+        self.user = authenticate(**authenticate_kwargs)
 
         # if not api_settings.USER_AUTHENTICATION_RULE(self.user):
         #     raise exceptions.AuthenticationFailed(
@@ -76,7 +74,7 @@ class GetTokenSerializer(serializers.Serializer):
         #         "no_active_account",
         #     )
 
-        # return {}
+        return {}
 
     @classmethod
     def get_token(cls, user):
