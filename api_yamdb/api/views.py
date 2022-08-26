@@ -1,8 +1,9 @@
 import random
 
-from api.serializers import (CategorySerializer, CommentSerializer,
+from .serializers import (CategorySerializer, CommentSerializer,
                              CustomUserSerializer, GenreSerializer,
-                             ReviewSerializer, TitleSerializer)
+                             ReviewSerializer, TitleSerializer,
+                             GetTokenSerializer, SignUpSerializer)
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, mixins, permissions, status, viewsets
@@ -13,7 +14,7 @@ from rest_framework_simplejwt import views
 from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import CustomUser
 
-from .serializers import GetTokenSerializer, SignUpSerializer
+# from .serializers import GetTokenSerializer, SignUpSerializer
 
 
 class SignUpViewSet(CreateModelMixin, viewsets.GenericViewSet):
@@ -113,3 +114,9 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
         serializer.save(author=self.request.user, review_id=review.id)
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+

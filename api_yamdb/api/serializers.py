@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-# from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Comment, Genre, Review, Title
 # from reviews.models import Title, Genre, Category
 from users.models import CustomUser
@@ -20,6 +20,24 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'role'
         )
 
+
+class SignUpSerializer(serializers.ModelSerializer):
+    """ Сериализатор модели CustomUser """
+
+    class Meta:
+        model = CustomUser
+        fields = (
+            'username',
+            'email',
+            'confirm_code',
+        )
+        validators = [
+            UniqueTogetherValidator(
+                queryset=CustomUser.objects.all(),
+                fields=('username', 'email'),
+                message='Имя пользователя или email уже используются'
+            )
+        ]
 
 class TitleSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(read_only=True,

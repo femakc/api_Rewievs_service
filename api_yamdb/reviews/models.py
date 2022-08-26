@@ -101,7 +101,4 @@ class Comment(models.Model):
 
     def __str__(self):
         # return self.text
-<<<<<<< HEAD
-        return (f'{self.author.username}, {self.text}')
-=======
         return (f'{self.author.username}, {self.text}')
