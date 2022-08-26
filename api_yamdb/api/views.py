@@ -1,6 +1,6 @@
+import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, viewsets
-
 from api.permissions import AdminOrReadOnly
 from api.serializers import CustomUserSerializer, \
     GenreSerializer, CategorySerializer, TitleReadSerializer, \
@@ -22,8 +22,18 @@ class UserViewSet(viewsets.ModelViewSet):
     #     serializer.save(author=self.request.user)
 
 
+class TitleFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(lookup_expr='iexact')
+    genre = django_filters.CharFilter('genre__slug')
+
+    class Meta:
+        model = Title
+        fields = ['price', 'release_date']
+
+
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
+    filter_backends = (DjangoFilterBackend,)
 
     def get_serializer_class(self):
         if self.action in ('retrieve', 'list',):
@@ -40,7 +50,7 @@ class GenreViewSet(mixins.CreateModelMixin,
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
     lookup_field = 'slug'
-    permission_classes = AdminOrReadOnly
+    #permission_classes = AdminOrReadOnly
 
 
 class CategoryViewSet(mixins.CreateModelMixin,
