@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import CustomUser
+from users.models import User
 
 class Category(models.Model):
     name = models.CharField('Категория', max_length=200)
@@ -46,7 +46,7 @@ class Review(models.Model):
     text = models.TextField(max_length=5000,
         verbose_name='Текст отзыва')
     author = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE,
+        User, on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='Автор отзыва')
     score = models.SmallIntegerField(
@@ -70,7 +70,7 @@ class Comment(models.Model):
     text = models.TextField(max_length=5000,
         verbose_name='Текст комментария')
     author = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE,
+        User, on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='Автор комментария')
     pub_date = models.DateTimeField(auto_now_add=True,
