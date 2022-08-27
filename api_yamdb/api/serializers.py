@@ -1,6 +1,8 @@
 from collections import OrderedDict
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 from rest_framework import exceptions, serializers
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.tokens import AccessToken
@@ -150,3 +152,52 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Comment
+
+
+class GenreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = ('name', 'slug')
+        model = Genre
+        lookup_field = 'slug'
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = ('name', 'slug')
+        model = Category
+        lookup_field = 'slug'
+
+
+class TitleReadSerializer(serializers.ModelSerializer):
+    category = CategorySerializer(read_only=True)
+    genre = GenreSerializer(many=True)
+    rating = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        fields = '__all__'
+        model = Title
+
+
+class TitleWriteSerializer(serializers.ModelSerializer):
+    category = serializers.SlugRelatedField(
+        queryset=Category.objects.all(),
+        slug_field='slug'
+    )
+    genre = serializers.SlugRelatedField(
+        queryset=Genre.objects.all(),
+        slug_field='slug',
+        many=True
+    )
+
+    #def validate(self, value):
+    #    now = timezone.now().year
+    #    if value > now:
+    #        raise ValidationError(
+    #            f'год выпуска {value} не может быть больше настоящего {now}'
+    #         )
+
+    class Meta:
+        fields = '__all__'
+        model = Title
