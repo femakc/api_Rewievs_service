@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
@@ -19,26 +20,73 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
+=======
+from rest_framework import serializers, exceptions
+from rest_framework.validators import UniqueTogetherValidator
+
+from users.models import User
+
+from rest_framework_simplejwt.tokens import AccessToken
+from django.contrib.auth import get_user_model
+from collections import OrderedDict
+
+# from api_yamdb.settings import api_settings
+>>>>>>> feature/auth/user
 
 
 class SignUpSerializer(serializers.ModelSerializer):
-    """ Сериализатор модели CustomUser """
+    """ Сериализатор для SignUp """
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = (
             'username',
             'email',
-            'confirm_code',
+            'confirmation_code',
+        )
+        # validators = [
+        #     UniqueTogetherValidator(
+        #         queryset=User.objects.all(),
+        #         fields=('username', 'email'),
+        #         message='Имя пользователя или email уже используются'
+        #     )
+        # ]
+
+    # def validate(self, attrs):
+    #     return super().validate(attrs)
+
+    # def validate(self, data):
+    #     print(data)
+    #     user = User.objects.filter(username=data.username, email=data.email)
+    #     print(user)
+    #     if not user:
+    #         raise serializers.ValidationError("Тарам пам пам")
+
+    #     return data
+
+
+class UserSerializer(serializers.ModelSerializer):
+    """ Сериализаторор для модели User."""
+
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'bio',
+            'role'
         )
         validators = [
             UniqueTogetherValidator(
-                queryset=CustomUser.objects.all(),
+                queryset=User.objects.all(),
                 fields=('username', 'email'),
                 message='Имя пользователя или email уже используются'
             )
         ]
 
+<<<<<<< HEAD
 class TitleSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(read_only=True,
                                           slug_field='username')
@@ -62,13 +110,34 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Category
+=======
+    # def create(self, validated_data):
+    #     return super().create(validated_data)
+
+
+# class UserMeSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = User
+#         fields = (
+#             'username',
+#             'email',
+#             'first_name',
+#             'last_name',
+#             'bio',
+#             'role'
+#         )
+
+>>>>>>> feature/auth/user
 
 class GetTokenSerializer(serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD
     token_class = AccessToken
 
     default_error_messages = {
-        "no_active_account": ("No active account found with the given credentials")
+        "no_active_account": (
+            "No active account found with the given credentials"
+        )
     }
 
     def __init__(self, *args, **kwargs):
@@ -78,33 +147,34 @@ class GetTokenSerializer(serializers.Serializer):
         self.fields["confirmation_code"] = serializers.CharField()
 
     def validate(self, attrs):
-        # print(attrs)
+        print(attrs)
         username = attrs.get('username')
-        print(username)
-        user = CustomUser.objects.filter(username=username)
+        confirmation_code = attrs.get('confirmation_code')
+        print(username, confirmation_code)
+        user = User.objects.get(username=username)
         print(user)
-        confirmation_code = user.get('confirm_code')
-        print(confirmation_code)
-        
-        
-        # authenticate_kwargs = {
-        #     self.username_field: attrs[self.username_field],
-        #     "confirm_code": attrs["confirm_code"],
-        # }
-        # try:
-        #     authenticate_kwargs["request"] = self.context["request"]
-        # except KeyError:
-        #     pass
+        confirm_code = user.confirmation_code # надо поправит 
+        print(confirm_code)
+        token = self.get_token(user)
+        data = OrderedDict()
+        data["token"] = str(token)
 
-        # self.user = authenticate(**authenticate_kwargs)
+        if confirmation_code != confirm_code:
+            raise exceptions.AuthenticationFailed(
+                self.error_messages["no_active_account"],
+                "no_active_account",
+            )
 
-        # if not api_settings.USER_AUTHENTICATION_RULE(self.user):
-        #     raise exceptions.AuthenticationFailed(
-        #         self.error_messages["no_active_account"],
-        #         "no_active_account",
-        #     )
+        authenticate_kwargs = {
+            self.username_field: attrs[self.username_field],
+            "confirmation_code": attrs["confirmation_code"],
+        }
+        try:
+            authenticate_kwargs["request"] = self.context["request"]
+        except KeyError:
+            pass
 
-        # return {}
+        return data
 
     @classmethod
     def get_token(cls, user):
