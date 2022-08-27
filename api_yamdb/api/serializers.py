@@ -1,37 +1,12 @@
-<<<<<<< HEAD
-from django.contrib.auth import authenticate, get_user_model
-from rest_framework import serializers
+from collections import OrderedDict
+
+from django.contrib.auth import get_user_model
+from rest_framework import exceptions, serializers
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Comment, Genre, Review, Title
 # from reviews.models import Title, Genre, Category
-from users.models import CustomUser
-
-
-class CustomUserSerializer(serializers.ModelSerializer):
-    """ Сериализатор модели CustomUser """
-    class Meta:
-        model = CustomUser
-        fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'bio',
-            'role'
-        )
-=======
-from rest_framework import serializers, exceptions
-from rest_framework.validators import UniqueTogetherValidator
-
 from users.models import User
-
-from rest_framework_simplejwt.tokens import AccessToken
-from django.contrib.auth import get_user_model
-from collections import OrderedDict
-
-# from api_yamdb.settings import api_settings
->>>>>>> feature/auth/user
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -86,49 +61,13 @@ class UserSerializer(serializers.ModelSerializer):
             )
         ]
 
-<<<<<<< HEAD
-class TitleSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(read_only=True,
-                                          slug_field='username')
 
-
-
-    class Meta:
-        fields = '__all__'
-        model = Title
-
-
-class GenreSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        fields = '__all__'
-        model = Genre
-
-
-class CategorySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        fields = '__all__'
-        model = Category
-=======
-    # def create(self, validated_data):
-    #     return super().create(validated_data)
-
-
-# class UserMeSerializer(serializers.ModelSerializer):
+# class UserSerializer(serializers.ModelSerializer):
+#     """ Сериализаторор для модели Post."""
 
 #     class Meta:
-#         model = User
-#         fields = (
-#             'username',
-#             'email',
-#             'first_name',
-#             'last_name',
-#             'bio',
-#             'role'
-#         )
-
->>>>>>> feature/auth/user
+#         model = CustomUser
+#         fields = ('__all__')
 
 class GetTokenSerializer(serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD

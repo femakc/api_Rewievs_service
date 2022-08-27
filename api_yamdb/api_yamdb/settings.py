@@ -16,12 +16,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-<<<<<<< HEAD
-    'users.apps.CustomUserConfig',
-=======
     'users.apps.UsersConfig',
-    'reviews.apps.ReviewsConfig',
->>>>>>> feature/auth/user
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -1,35 +1,26 @@
 import random
 from urllib import request
 
-from .serializers import (CategorySerializer, CommentSerializer,
-                             CustomUserSerializer, GenreSerializer,
-                             ReviewSerializer, TitleSerializer,
-                             GetTokenSerializer, SignUpSerializer)
 from django.core.mail import send_mail
-<<<<<<< HEAD
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, mixins, permissions, status, viewsets
-from rest_framework.mixins import CreateModelMixin
-from rest_framework.permissions import AllowAny
+from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt import views
-from reviews.models import Category, Comment, Genre, Review, Title
-from users.models import CustomUser
+from reviews.models import (Category, Comment, Genre, Review, Title,
+                            UserSerializer)
+from users.models import User
+
+from .permissions import IsOwnerOrAdmin
+from .serializers import (CategorySerializer, CommentSerializer,
+                          CustomUserSerializer, GenreSerializer,
+                          GetTokenSerializer, ReviewSerializer,
+                          SignUpSerializer, TitleSerializer)
 
 # from .serializers import GetTokenSerializer, SignUpSerializer
-=======
-from rest_framework import status, viewsets, filters
-from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAdminUser
-from rest_framework.generics import CreateAPIView, UpdateAPIView
-
-from .serializers import SignUpSerializer, GetTokenSerializer, UserSerializer
-from .permissions import IsOwnerOrAdmin
-from users.models import User
-from rest_framework.pagination import LimitOffsetPagination
-from rest_framework_simplejwt import views
->>>>>>> feature/auth/user
 
 
 class SignUpViewSet(viewsets.GenericViewSet):
@@ -82,67 +73,6 @@ class SignUpViewSet(viewsets.GenericViewSet):
 class GetTokenView(views.TokenObtainSlidingView):
     serializer_class = GetTokenSerializer
 
-<<<<<<< HEAD
-class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
-    serializer_class = TitleSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
-
-class GenreViewSet(viewsets.ModelViewSet):
-    queryset = Genre.objects.all()
-    serializer_class = GenreSerializer
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('name',)
-
-    # def perform_create(self, serializer):
-    #     serializer.save(author=self.request.user)
-
-    def perform_create(self, serializer):
-        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
-        serializer.save(author=self.request.user, review_id=review.id)
-# >>>>>>> feature/review/comments
-
-
-
-
-class ReviewViewSet(viewsets.ModelViewSet):
-    """Обработчик запросов к модели Review"""
-    # queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
-
-    def get_queryset(self):
-        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        new_queryset = title.reviews.all()
-        return new_queryset
-
-    def perform_create(self, serializer):
-        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        serializer.save(author=self.request.user, title=title)
-
-
-class CommentViewSet(viewsets.ModelViewSet):
-    """Обработчик запросов к модели Comment"""
-    # queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-
-    def get_queryset(self):
-        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
-        new_queryset = review.comments.all()
-        return new_queryset
-
-    def perform_create(self, serializer):
-        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
-        serializer.save(author=self.request.user, review_id=review.id)
-
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-
-
-=======
 
 class UserVievSet(viewsets.ModelViewSet):
     """Обработчик запросов к модели User."""
@@ -197,4 +127,63 @@ class UserMeVievSet(UpdateAPIView):
 #                 'error': 'Пользователь уже зарегистрирован в системе!'
 #             }
 #             return Response(response, status=status.HTTP_400_BAD_REQUEST)
->>>>>>> feature/auth/user
+
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class GenreViewSet(viewsets.ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
+
+    # def perform_create(self, serializer):
+    #     serializer.save(author=self.request.user)
+
+    def perform_create(self, serializer):
+        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        serializer.save(author=self.request.user, review_id=review.id)
+
+
+
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    """Обработчик запросов к модели Review"""
+    # queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        new_queryset = title.reviews.all()
+        return new_queryset
+
+    def perform_create(self, serializer):
+        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        serializer.save(author=self.request.user, title=title)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    """Обработчик запросов к модели Comment"""
+    # queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        new_queryset = review.comments.all()
+        return new_queryset
+
+    def perform_create(self, serializer):
+        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        serializer.save(author=self.request.user, review_id=review.id)
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+

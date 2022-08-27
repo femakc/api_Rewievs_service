@@ -10,11 +10,7 @@ CHOICES = (
 )
 
 
-<<<<<<< HEAD
-class CustomUser(AbstractUser):
-=======
 class User(AbstractUser):
->>>>>>> feature/auth/user
     username = models.CharField(max_length=100, unique=True)
     confirmation_code = models.CharField(max_length=32)
     bio = models.TextField('Биография', default='', blank=True, null=True,)
@@ -24,8 +20,6 @@ class User(AbstractUser):
         choices=CHOICES,
         default='user'
     )
-<<<<<<< HEAD
-=======
 
     def __str__(self):
         return str(self.username)
@@ -79,4 +73,3 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError(_('Superuser must have is_superuser=True.'))
         return self.create_user(email, password=password, **extra_fields)
->>>>>>> feature/auth/user

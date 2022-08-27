@@ -2,16 +2,15 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from .views import (CategoryViewSet, CommentViewSet, GenreViewSet,
-                    GetTokenView, ReviewViewSet, SignUpViewSet,
-                    TitleViewSe, UserVievSet, UserMeVievSet
-)
+                    GetTokenView, ReviewViewSet, SignUpViewSet, TitleViewSet,
+                    UserMeVievSet, UserVievSet)
 
 app_name = 'api'
 
 router = DefaultRouter()
 
 router.register(r'api/v1/auth/signup', SignUpViewSet, basename='signupusers')
-router.register(r'api/v1/users', UserVievSet, basename='users')
+router.register(r'api/v1/users', UserMeVievSet, basename='users')
 router.register('titles', TitleViewSet, basename='titles')
 router.register('categories', CategoryViewSet, basename='categories')
 router.register('genres', GenreViewSet, basename='genres')
@@ -32,6 +31,7 @@ router.register(
 )
 
 urlpatterns = [
+    path('api/v1/users/me/', UserMeVievSet.as_view(), name='userme'),
     path('', include(router.urls)),
     path(
         'api/v1/auth/token/',
