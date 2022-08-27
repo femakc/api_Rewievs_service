@@ -62,8 +62,22 @@ class UserSerializer(serializers.ModelSerializer):
             )
         ]
 
-    def create(self, validated_data):
-        return super().create(validated_data)
+    # def create(self, validated_data):
+    #     return super().create(validated_data)
+
+
+# class UserMeSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = User
+#         fields = (
+#             'username',
+#             'email',
+#             'first_name',
+#             'last_name',
+#             'bio',
+#             'role'
+#         )
 
 
 class GetTokenSerializer(serializers.Serializer):
