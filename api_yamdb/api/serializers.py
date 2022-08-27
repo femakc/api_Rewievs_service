@@ -144,13 +144,8 @@ class CommentSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username'
     )
-    review = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='review'
-    )
-
     class Meta:
-        fields = '__all__'
+        exclude = ('review',)
         model = Comment
 
 

@@ -23,6 +23,7 @@ class Title(models.Model):
     )
     genre = models.ManyToManyField(Genre, related_name='genres')
 
+
 class Review(models.Model):
     """Отзывы пользователей на контент"""
 
@@ -56,7 +57,6 @@ class Review(models.Model):
         verbose_name='Дата создания отзыва')
 
     def __str__(self):
-        # return self.text
         return (f'{self.author.username}, {self.text}, {self.score}')
 
 
@@ -77,5 +77,4 @@ class Comment(models.Model):
         verbose_name='Дата создания комментария')
 
     def __str__(self):
-        # return self.text
         return (f'{self.author.username}, {self.text}')

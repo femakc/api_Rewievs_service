@@ -11,21 +11,16 @@ router = DefaultRouter()
 
 router.register(r'api/v1/auth/signup', SignUpViewSet, basename='signupusers')
 router.register(r'api/v1/users', UserVievSet, basename='users')
-router.register('titles', TitleViewSet, basename='titles')
-router.register('categories', CategoryViewSet, basename='categories')
-router.register('genres', GenreViewSet, basename='genres')
-# router.register(
-#     r'api/v1/auth/signup',
-#     UserViewSet,
-#     basename='users'
-# )
+router.register('api/v1/titles', TitleViewSet, basename='titles')
+router.register('api/v1/categories', CategoryViewSet, basename='categories')
+router.register('api/v1/genres', GenreViewSet, basename='genres')
 router.register(
-    r'titles/(?P<title_id>\d+)/reviews/',
+    r'api/v1/titles/(?P<title_id>\d+)/reviews',
     ReviewViewSet,
     basename='review'
 )
 router.register(
-    r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments/',
+    r'api/v1/titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
     CommentViewSet,
     basename='comment'
 )
