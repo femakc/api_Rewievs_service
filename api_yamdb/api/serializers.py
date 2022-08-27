@@ -1,7 +1,8 @@
 from collections import OrderedDict
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import exceptions, serializers
 from rest_framework.validators import UniqueTogetherValidator
@@ -128,13 +129,13 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username'
     )
-    title = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='title'
-    )
+    # title = serializers.SlugRelatedField(
+    #     read_only=True,
+    #     slug_field='title'
+    # )
 
     class Meta:
-        fields = '__all__'
+        fields = ('id', 'text', 'author', 'score', 'pub_date',)
         model = Review
 
 
@@ -144,8 +145,13 @@ class CommentSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username'
     )
+    # review = serializers.SlugRelatedField(
+    #     read_only=True,
+    #     slug_field='review'
+    # )
+
     class Meta:
-        exclude = ('review',)
+        fields = ('id', 'text', 'author', 'pub_date',)
         model = Comment
 
 
