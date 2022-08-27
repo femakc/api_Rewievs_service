@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import CustomUser
+from users.models import User
 
 
 class Category(models.Model):
@@ -21,7 +21,7 @@ class Genre(models.Model):
 class Title(models.Model):
     name = models.CharField('Название', max_length=200)
     author = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name='titles')
+        User, on_delete=models.CASCADE, related_name='titles')
     year = models.IntegerField(default=2000)
     # rating = models.ManyToManyField(Review, related_name='film_rating')
     description = models.TextField(default='')
@@ -58,7 +58,7 @@ class Review(models.Model):
         verbose_name='Текст отзыва'
     )
     author = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='Автор отзыва'
@@ -89,7 +89,7 @@ class Comment(models.Model):
         verbose_name='Текст комментария'
     )
     author = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='Автор комментария'

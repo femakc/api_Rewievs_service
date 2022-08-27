@@ -10,15 +10,15 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt import views
-from reviews.models import (Category, Comment, Genre, Review, Title,
-                            UserSerializer)
+from reviews.models import (Category, Comment, Genre, Review, Title)
 from users.models import User
 
 from .permissions import IsOwnerOrAdmin
 from .serializers import (CategorySerializer, CommentSerializer,
-                          CustomUserSerializer, GenreSerializer,
+                          GenreSerializer,
                           GetTokenSerializer, ReviewSerializer,
-                          SignUpSerializer, TitleSerializer)
+                          SignUpSerializer, TitleSerializer,
+                          UserSerializer)
 
 # from .serializers import GetTokenSerializer, SignUpSerializer
 

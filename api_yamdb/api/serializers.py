@@ -119,6 +119,7 @@ class GetTokenSerializer(serializers.Serializer):
     def get_token(cls, user):
         return cls.token_class.for_user(user)
 
+
 class ReviewSerializer(serializers.ModelSerializer):
     """Сериализатор модели Review"""
     author = serializers.SlugRelatedField(
