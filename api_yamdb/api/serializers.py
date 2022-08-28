@@ -1,3 +1,4 @@
+import random
 from rest_framework import serializers, exceptions
 from rest_framework.validators import UniqueTogetherValidator
 
@@ -12,33 +13,42 @@ from collections import OrderedDict
 
 class SignUpSerializer(serializers.ModelSerializer):
     """ Сериализатор для SignUp """
+    # confirmation_code = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = (
             'username',
             'email',
-            'confirmation_code',
+            # 'confirmation_code',
         )
-        # validators = [
-        #     UniqueTogetherValidator(
-        #         queryset=User.objects.all(),
-        #         fields=('username', 'email'),
-        #         message='Имя пользователя или email уже используются'
-        #     )
-        # ]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=User.objects.all(),
+                fields=('username', 'email'),
+                message='Имя пользователя или email уже используются'
+            )
+        ]
+    
+    # def get_confirmation_code(self, obj):
+    #     confirmation_code = random.randint(1, 1000000)
+    #     return confirmation_code
 
-    # def validate(self, attrs):
-    #     return super().validate(attrs)
+    def validate(self, data):
+        # print(data)
+        # print(data['email'])
+        user = User.objects.filter(email=data['email'])
+        # print(user)
+        if user:
+            raise serializers.ValidationError(
+                "Пользователь с таким email сцуществует"
+            )
+        if data['username'] == 'me':
+            raise serializers.ValidationError(
+                "Имя пользователя не может быть 'me' "
+            )
 
-    # def validate(self, data):
-    #     print(data)
-    #     user = User.objects.filter(username=data.username, email=data.email)
-    #     print(user)
-    #     if not user:
-    #         raise serializers.ValidationError("Тарам пам пам")
-
-    #     return data
+        return data
 
 
 class UserSerializer(serializers.ModelSerializer):

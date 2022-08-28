@@ -8,7 +8,7 @@ app_name = 'api'
 
 router = DefaultRouter()
 
-router.register(r'api/v1/auth/signup', SignUpViewSet, basename='signupusers')
+router.register(r'api/v1/auth/signup', SignUpViewSet, basename='signup')
 # router.register(r'api/v1/users/me', UserMeVievSet, basename='usersme')
 router.register(r'api/v1/users', UserVievSet, basename='users')
 
