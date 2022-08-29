@@ -66,8 +66,8 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     """ Сериализаторор для модели User."""
-    # username = serializers.SlugField(max_length=50, min_length=None, allow_blank=False)
-    # email = serializers.EmailField()
+    username = serializers.SlugField(max_length=50, min_length=None, allow_blank=False, required=True)
+    email = serializers.EmailField(required=True)
 
     class Meta:
         model = User
@@ -79,38 +79,18 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
-        # validators = [
-        #     UniqueTogetherValidator(
-        #         queryset=User.objects.all(),
-        #         fields=('username', 'email'),
-        #         message='Имя пользователя или email уже используются'
-        #     )
-        # ]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=User.objects.all(),
+                fields=('username', 'email'),
+                message='Имя пользователя или email уже используются'
+            )
+        ]
 
-    def validate(self, data):
-        print('validate!!!')
-        print(data)
-        print(data['email'])
-        # user = User.objects.filter(email=data['email'])
-        # print(user)
-        user = User.objects.filter(username=data['username'])
-        user_email = User.objects.filter(email=data['email'])
-        print(user_email)
-        if user:
-            print("username не валидный")
-            raise serializers.ValidationError(
-                "Пользователь с таким username уже существует "
-            )
-        if user_email:
-            print("email не валидный")
-            raise serializers.ValidationError(
-                "Пользователь с таким email сцуществует"
-            )
-        if data['username'] == 'me':
-            raise serializers.ValidationError(
-                "Имя пользователя не может быть 'me' "
-            )
-        return data
+    # def validate(self, data):
+    #     print('user validate!!!')
+    #     return data
+
 
 # class UserMeSerializer(serializers.ModelSerializer):
 
