@@ -1,7 +1,7 @@
 from collections import OrderedDict
-
+from django.db.models import Avg
 from django.contrib.auth import get_user_model
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, ParseError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import exceptions, serializers
@@ -177,7 +177,9 @@ class TitleReadSerializer(serializers.ModelSerializer):
     rating = serializers.IntegerField(read_only=True)
 
     class Meta:
-        fields = '__all__'
+        fields = (
+            'id', 'name', 'year', 'rating', 'description', 'genre', 'category'
+        )
         model = Title
 
 

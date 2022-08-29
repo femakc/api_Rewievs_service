@@ -177,6 +177,7 @@ class CategoryViewSet(mixins.CreateModelMixin,
 class ReviewViewSet(viewsets.ModelViewSet):
     """Обработчик запросов к модели Review."""
     serializer_class = ReviewSerializer
+    permission_classes = (IsAuthorOrReadOnly,)
 
     def get_queryset(self):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
@@ -201,7 +202,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     """Обработчик запросов к модели Comment."""
     serializer_class = CommentSerializer
-    # permission_classes = (IsAuthorOrReadOnly,)
+    permission_classes = (IsAuthorOrReadOnly,)
 
     def get_queryset(self):
         review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
@@ -211,6 +212,11 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
         serializer.save(author=self.request.user, review_id=review.id)
+
+    def perform_destroy(self, instance):
+        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        instance
+
 
     # def perform_update(self, serializer):
     #     review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))

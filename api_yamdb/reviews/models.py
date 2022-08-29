@@ -21,7 +21,7 @@ class Title(models.Model):
         Category, on_delete=models.SET_NULL, related_name='categories',
         blank=True, null=True
     )
-    genre = models.ManyToManyField(Genre, related_name='genres')
+    genre = models.ManyToManyField(Genre, related_name='genres1')
 
 
 class Review(models.Model):
@@ -52,12 +52,13 @@ class Review(models.Model):
         verbose_name='Автор отзыва')
     score = models.SmallIntegerField(
         choices=SCORE_CHOICES,
-        verbose_name='Рейтинг')
+        verbose_name='Рейтинг',
+        )
     pub_date = models.DateTimeField(auto_now_add=True,
         verbose_name='Дата создания отзыва')
 
     def __str__(self):
-        return (f'{self.author.username}, {self.text}, {self.score}')
+        return (f'{self.author.username}, {self.text}, {self.score}, {self.pub_date}')
 
 
 class Comment(models.Model):
