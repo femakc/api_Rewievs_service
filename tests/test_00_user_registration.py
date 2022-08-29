@@ -91,7 +91,7 @@ class Test00UserRegistration:
             f'Страница `{self.url_signup}` не найдена, проверьте этот адрес в *urls.py*'
         )
 
-        code = 200
+        code = 201
         assert response.status_code == code, (
             f'Проверьте, что при {request_type} запросе `{self.url_signup}` с валидными данными '
             f'создается пользователь и возвращается статус {code}'

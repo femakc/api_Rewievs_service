@@ -1,7 +1,8 @@
 import random
 from urllib import request
 
-from django.core.mail import send_mail
+# from django.core.mail import send_mail
+from .send_email import send_mesege
 from rest_framework import status, viewsets, filters
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 from rest_framework.response import Response
@@ -22,80 +23,29 @@ class SignUpViewSet(viewsets.ModelViewSet):
     serializer_class = SignUpSerializer
     permission_classes = (AllowAny,)
 
-    def send_mesege(self, username):
-        user = User.objects.get(username=username)
-        email = user.email
-        subject = 'confirmation_code'
-        message = f'{username} ваш конфирмайшен код {user.confirmation_code}'
-        return send_mail(subject, message, 'admin@admin.ru', [email])
-
     def perform_create(self, serializer):
         print('def create')
         print(self.kwargs)
         print(serializer.validated_data)
         confirmation_code = random.randint(1, 1000000)
-        # request.data['confirmation_code'] = confirmation_code
-        # serializer = self.get_serializer(data=request.data)
-        # serializer.is_valid(raise_exception=True)
+        serializer.validated_data['confirmation_code'] = confirmation_code
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         username = serializer.validated_data.get('username')
-        email = serializer.validated_data.get('email')
-        print(username, email, confirmation_code)
-        # username = self.request.data.get('username')
-        # email = self.request.data['email']
-        is_registered = User.objects.filter(username=username, email=email)
-        if not is_registered.exists():
-            print("not nor")
-            # serializer = self.serializer_class(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save(confirmation_code=confirmation_code, status=status.HTTP_200_OK)
-            self.send_mesege(username)
-            # return Response(serializer.data, status=status.HTTP_200_OK)
-            # return Response(
-            #     f'мы отправили вам confirmation_code на email: {email}',
-            #     status=status.HTTP_200_OK
-            # )
-        else:
-            self.send_mesege(username)
-            response = {
-                'error': 'Пользователь уже зарегистрирован в системе!'
-            }
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        send_mesege(username)
+        print(username, "email", confirmation_code)
+        # return Response("serializer.data", status=status.HTTP_200_OK)
 
-
-
-    # def create(self, request, *args, **kwargs):
-    #     # print('def create')
-    #     confirmation_code = random.randint(1, 1000000)
-    #     request.data['confirmation_code'] = confirmation_code
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     # self.perform_create(serializer)
-    #     # headers = self.get_success_headers(serializer.data)
-    #     username = request.data.get('username')
-    #     email = request.data['email']
-    #     # self.send_mesege(username)
-    #     # return Response(
-    #     #     f'мы отправили вам confirmation_code на email: {email}',
-    #     #     status=status.HTTP_201_CREATED,
-    #     #     headers=headers
-    #     # )
-    #     is_registered = User.objects.filter(username=username, email=email)
-    #     if not is_registered.exists():
-    #         serializer = self.serializer_class(data=request.data)
-    #         serializer.is_valid(raise_exception=True)
-    #         serializer.save()
-    #         self.send_mesege(username)
-    #         # return Response(serializer.data, status=status.HTTP_200_OK)
-    #         return Response(
-    #             f'мы отправили вам confirmation_code на email: {email}',
-    #             status=status.HTTP_201_CREATED
-    #         )
-    #     else:
-    #         self.send_mesege(username)
-    #         response = {
-    #             'error': 'Пользователь уже зарегистрирован в системе!'
-    #         }
-    #         return Response(response, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
 
 
 class GetTokenView(views.TokenObtainSlidingView):
@@ -107,7 +57,7 @@ class UserVievSet(viewsets.ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAuthenticated,)
     pagination_class = LimitOffsetPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['username']
@@ -191,3 +141,64 @@ class UserMeVievSet(APIView):
 #                 'error': 'Пользователь уже зарегистрирован в системе!'
 #             }
 #             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+        # email = serializer.validated_data.get('email')
+        # username = self.request.data.get('username')
+        # email = self.request.data['email']
+        # is_registered = User.objects.filter(username=username, email=email)
+        # if not is_registered.exists():
+        #     print("not nor")
+        #     # serializer = self.serializer_class(data=request.data)
+        #     serializer.is_valid(raise_exception=True)
+        #     serializer.save(confirmation_code=confirmation_code)
+        #     send_mesege(username)
+        #     # return Response(serializer.data, status=status.HTTP_200_OK)
+        #     return Response(
+        #         f'мы отправили вам confirmation_code на email: {email}',
+        #         status=status.HTTP_200_OK
+        #     )
+        # else:
+        #     print("зарегестрированн !!!!")
+        #     send_mesege(username)
+        #     response = {
+        #         'error': 'Пользователь уже зарегистрирован в системе!'
+        #     }
+        #     return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+    # def create(self, request, *args, **kwargs):
+    #     # print('def create')
+    #     confirmation_code = random.randint(1, 1000000)
+    #     request.data['confirmation_code'] = confirmation_code
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     # self.perform_create(serializer)
+    #     # headers = self.get_success_headers(serializer.data)
+    #     username = request.data.get('username')
+    #     email = request.data['email']
+    #     # self.send_mesege(username)
+    #     # return Response(
+    #     #     f'мы отправили вам confirmation_code на email: {email}',
+    #     #     status=status.HTTP_201_CREATED,
+    #     #     headers=headers
+    #     # )
+    #     is_registered = User.objects.filter(username=username, email=email)
+    #     if not is_registered.exists():
+    #         serializer = self.serializer_class(data=request.data)
+    #         serializer.is_valid(raise_exception=True)
+    #         serializer.save()
+    #         self.send_mesege(username)
+    #         # return Response(serializer.data, status=status.HTTP_200_OK)
+    #         return Response(
+    #             f'мы отправили вам confirmation_code на email: {email}',
+    #             status=status.HTTP_201_CREATED
+    #         )
+    #     else:
+    #         self.send_mesege(username)
+    #         response = {
+    #             'error': 'Пользователь уже зарегистрирован в системе!'
+    #         }
+    #         return Response(response, status=status.HTTP_400_BAD_REQUEST)
