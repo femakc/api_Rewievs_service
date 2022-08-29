@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.views import APIView
 
-from .serializers import SignUpSerializer, GetTokenSerializer, UserSerializer
+from .serializers import SignUpSerializer, GetTokenSerializer, UserSerializer, UserMeSerializer
 from .permissions import IsOwnerOrAdmin
 from users.models import User
 from rest_framework.pagination import LimitOffsetPagination
@@ -29,23 +29,86 @@ class SignUpViewSet(viewsets.ModelViewSet):
         print(serializer.validated_data)
         confirmation_code = random.randint(1, 1000000)
         serializer.validated_data['confirmation_code'] = confirmation_code
+        print(serializer.validated_data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        print('валидный serializer')
         username = serializer.validated_data.get('username')
-        send_mesege(username)
-        print(username, "email", confirmation_code)
+        email = serializer.validated_data.get('email')
+        print(username, email, confirmation_code)
+        is_registered = User.objects.filter(email=email, username=username)
+        if not is_registered.exists():
+            print('new user')
+            # serializer = self.serializer_class(data=serializer.validated_data)
+            serializer.is_valid(raise_exception=True)
+            print(serializer.validated_data)
+            serializer.save(
+                username=username,
+                email=email,
+                confirmation_code=confirmation_code
+            )
+            print("new user")
+            # send_mesege(username)
+            # self.send_code(username)
+            # return Response('return после создания', status=status.HTTP_201_CREATED)
+        else:
+            print("пользователь есть")
+            # send_mesege(username)
+            # return Response("serializer.data", status=status.HTTP_200_OK) *******************
+            # response = {
+            #     'error': 'Пользователь уже зарегистрирован в системе!'
+            # }
+            # return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+        # serializer.save()
+        # username = serializer.validated_data.get('username')
+        # send_mesege(username)
+        # print(username, email, confirmation_code)
         # return Response("serializer.data", status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        print("зашли в create")
+        request = request.data.copy()
+        # serializer = self.get_serializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        # headers = self.get_success_headers(serializer.data)
+        # return Response(
+        #     "create",
+        #     status=status.HTTP_201_CREATED,
+        #     headers=headers
+        # )
+        print(request)
+        serializer = self.get_serializer(data=request)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED,
-            headers=headers
-        )
+        print(kwargs)
+        print(request)
+        confirmation_code = random.randint(1, 1000000)
+        request['confirmation_code'] = confirmation_code
+        print(request)
+        serializer.is_valid(raise_exception=True)
+        print('валидный serializer')
+        username = request.get('username')
+        email = request.get('email')
+        print(username, email, confirmation_code)
+        is_registered = User.objects.filter(email=email, username=username)
+        if not is_registered.exists():
+            print('new user')
+            # serializer = self.serializer_class(data=serializer.validated_data)
+            serializer.is_valid(raise_exception=True)
+            print(request)
+            self.perform_create(serializer)
+            print("new user, отправляем письмо")
+            send_mesege(username)
+            # self.send_code(username)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            print("пользователь есть, отправляем письмо")
+            send_mesege(username)
+            serializer.is_valid(raise_exception=True)
+            print(request)
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class GetTokenView(views.TokenObtainSlidingView):
@@ -91,10 +154,11 @@ class UserMeVievSet(APIView):
         return Response(serializer_for_queryset.data, status=status.HTTP_200_OK)
 
     def patch(self, request):
+        print("зашли в PATCH me/")
         user = request.user
         user = User.objects.get(username=user.username)
-
-        serializer = UserSerializer(user, data=request.data, partial=True)# одно поле не весь объект
+        
+        serializer = UserMeSerializer(user, data=request.data, partial=True)# одно поле не весь объект
         # serializer = self.serializer_class
         if serializer.is_valid():
             serializer.save()
