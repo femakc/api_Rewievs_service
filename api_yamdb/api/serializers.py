@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.utils import timezone
+import datetime
 from rest_framework import serializers, exceptions
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.tokens import AccessToken
@@ -52,13 +52,12 @@ class TitleWriteSerializer(serializers.ModelSerializer):
         slug_field='slug',
         many=True
     )
-
-    #def validate(self, value):
-    #    now = timezone.now().year
-    #    if value > now:
-    #        raise ValidationError(
-    #            f'год выпуска {value} не может быть больше настоящего {now}'
-    #         )
+    def validate(self, value):
+        now = datetime.datetime.now()
+        if value['year'] > now.year:
+            raise serializers.ValidationError(
+                'год выпуска не может быть больше текущего')
+        return value
 
     class Meta:
         fields = '__all__'
