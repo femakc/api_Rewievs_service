@@ -1,5 +1,8 @@
+from django.core import validators
 from django.db import models
+
 from users.models import User
+
 
 class Category(models.Model):
     name = models.CharField('Категория', max_length=200)
@@ -50,13 +53,20 @@ class Review(models.Model):
         User, on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='Автор отзыва')
-    score = models.SmallIntegerField(
+    score = models.IntegerField(
         choices=SCORE_CHOICES,
         verbose_name='Рейтинг',
         )
     pub_date = models.DateTimeField(auto_now_add=True,
         verbose_name='Дата создания отзыва')
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['author', 'title'],
+                name='unique review')
+        ]
+    
     def __str__(self):
         return (f'{self.author.username}, {self.text}, {self.score}, {self.pub_date}')
 
@@ -65,6 +75,8 @@ class Comment(models.Model):
     """Комментарии пользователя на отзыв."""
     review = models.ForeignKey(
         Review, on_delete=models.CASCADE,
+        blank=True,
+        null=True,
         related_name='comments',
         verbose_name='Комментируемый отзыв'
     )
