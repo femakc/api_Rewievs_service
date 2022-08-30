@@ -223,7 +223,7 @@ class GenreViewSet(mixins.CreateModelMixin,
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     filter_backends = (filters.SearchFilter,)
-    # permission_classes = (AdminOrReadOnly,)
+    permission_classes = (AdminOrReadOnly,)
     search_fields = ('name',)
     lookup_field = 'slug'
 
@@ -236,7 +236,7 @@ class CategoryViewSet(mixins.CreateModelMixin,
     serializer_class = CategorySerializer
     search_fields = ('name',)
     lookup_field = 'slug'
-    # permission_classes = (AdminOrReadOnly,)
+    permission_classes = (AdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
 
 
@@ -245,11 +245,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly,]
     # queryset = Review.objects.all()
-
-    # def get_object(self):
-    #     obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
-    #     self.check_object_permissions(self.request, obj)
-    #     return obj
 
     def get_queryset(self):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
