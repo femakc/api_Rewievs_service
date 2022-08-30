@@ -10,8 +10,11 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.views import APIView
 
-from .serializers import SignUpSerializer, GetTokenSerializer, UserSerializer, UserMeSerializer
-from .permissions import IsAdminRole
+from .serializers import (
+    SignUpSerializer, GetTokenSerializer,
+    UserSerializer, UserMeSerializer
+)
+from .permissions import IsAdminRole, IsOwnerPatch
 from users.models import User
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework_simplejwt import views
@@ -122,49 +125,45 @@ class UserVievSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, IsAdminRole,)
     # pagination_class = LimitOffsetPagination
-    filter_backends = [filters.SearchFilter]
+    # filter_backends = [filters.SearchFilter]
     search_fields = ['username']
     lookup_field = "username"
 
 
 class UserMeVievSet(APIView):
     # queryset = User.objects.all()
-    # http_method_names = ['get']
-    serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
-    # lookup_field = "username"
+    serializer_class = UserMeSerializer
+    permission_classes = (IsAuthenticated, IsOwnerPatch)
+
+    def get(self, request):
+        serializer = self.serializer_class
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        return Response({'title': 'Jennifer Shrader Lawrence'})
 
     # def get(self, request):
     #     user = request.user
-    #     user = User.object.filter(username=user.username)
+    #     # print(type(user.username))
+    #     # user = User.object.filter(user=user)
+    #     queryset = User.objects.filter(username=user.username)
+    #     # print(queryset)
+    #     # Сериализуем извлечённый набор записей
+    #     serializer_for_queryset = UserSerializer(
+    #         instance=queryset, # Передаём набор записей
+    #         many=True # Указываем, что на вход подаётся именно набор записей
+    #     )
+    #     return Response(serializer_for_queryset.data, status=status.HTTP_200_OK)
 
-    #     return Response(status=status.HTTP_200_OK)
-
-    def get(self, request):
-        user = request.user
-        # print(type(user.username))
-        # user = User.object.filter(user=user)
-        queryset = User.objects.filter(username=user.username)
-        # print(queryset)
-        # Сериализуем извлечённый набор записей
-        serializer_for_queryset = UserSerializer(
-            instance=queryset, # Передаём набор записей
-            many=True # Указываем, что на вход подаётся именно набор записей
-        )
-        return Response(serializer_for_queryset.data, status=status.HTTP_200_OK)
-
-    def patch(self, request):
-        print("зашли в PATCH me/")
-        user = request.user
-        user = User.objects.get(username=user.username)
-        
-        serializer = UserMeSerializer(user, data=request.data, partial=True)# одно поле не весь объект
-        # serializer = self.serializer_class
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+    # def patch(self, request):
+    #     print("зашли в PATCH me/")
+    #     user = request.user
+    #     user = User.objects.get(username=user.username)
+    #     serializer = UserMeSerializer(user, data=request.data, partial=True)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
+    #     return Response(status=status.HTTP_400_BAD_REQUEST)
 
     # def patch(self, request, user_id):
         # user = User.objects.get(id=user_id)
