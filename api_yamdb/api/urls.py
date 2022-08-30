@@ -2,7 +2,7 @@ from django.urls import include, path
 # from rest_framework.authtoken import views
 from rest_framework.routers import DefaultRouter
 
-from .views import SignUpViewSet, GetTokenView, UserVievSet, UserMeVievSet
+from .views import SignUpViewSet, GetTokenView, UserVievSet, UserMeViewSet
 
 app_name = 'api'
 
@@ -14,7 +14,7 @@ router.register(r'api/v1/users', UserVievSet, basename='users')
 
 
 urlpatterns = [
-    path('api/v1/users/me/', UserMeVievSet, name='userme'),
+    path('api/v1/users/me/', UserMeViewSet.as_view(), name='userme'),
     path('', include(router.urls)),
     path(
         'api/v1/auth/token/',
