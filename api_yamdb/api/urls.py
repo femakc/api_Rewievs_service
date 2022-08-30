@@ -2,7 +2,7 @@ from django.urls import include, path
 # from rest_framework.authtoken import views
 from rest_framework.routers import DefaultRouter
 
-from .views import SignUpViewSet, GetTokenView, UserVievSet, UserMeViewSet
+from .views import GetTokenView, SignUpViewSet, UserMeViewSet, UserVievSet
 
 app_name = 'api'
 
