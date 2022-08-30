@@ -6,12 +6,12 @@ from .send_email import send_mesege
 from rest_framework import status, viewsets, filters
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated  
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.views import APIView
 
 from .serializers import SignUpSerializer, GetTokenSerializer, UserSerializer, UserMeSerializer
-from .permissions import IsOwnerOrAdmin
+from .permissions import IsAdminRole
 from users.models import User
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework_simplejwt import views
@@ -120,7 +120,7 @@ class UserVievSet(viewsets.ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAdminRole,)
     # pagination_class = LimitOffsetPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['username']
