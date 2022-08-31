@@ -25,7 +25,7 @@ from .serializers import (CategorySerializer, CommentSerializer,
 
 
 class SignUpViewSet(viewsets.ModelViewSet):
-    """ Обработчик запросов к модели User при регистрации """
+    """Обработчик запросов к модели User при регистрации."""
     queryset = User.objects.all()
     serializer_class = SignUpSerializer
     permission_classes = (AllowAny,)
@@ -91,6 +91,7 @@ class SignUpViewSet(viewsets.ModelViewSet):
 
 
 class GetTokenView(views.TokenObtainSlidingView):
+    """Обработчик получения токенов при регистрации."""
     serializer_class = GetTokenSerializer
 
 
@@ -131,6 +132,7 @@ class UserMeViewSet(APIView):
 
 
 class CategoryFilter(django_filters.FilterSet):
+    """Обработчик категорий произведений."""
     category = django_filters.CharFilter(
         field_name='name', lookup_expr='contains'
     )
@@ -141,6 +143,7 @@ class CategoryFilter(django_filters.FilterSet):
 
 
 class TitleFilter(django_filters.FilterSet):
+    """Обработчик фильтрации произведений."""
     name = django_filters.CharFilter(field_name='name', lookup_expr='contains')
     genre = django_filters.CharFilter(field_name='genre__slug')
     category = django_filters.CharFilter(field_name='category__slug')
@@ -152,6 +155,7 @@ class TitleFilter(django_filters.FilterSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
+    """Обработчик самих произведений."""
     queryset = Title.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
@@ -176,6 +180,7 @@ class GenreViewSet(mixins.CreateModelMixin,
                    mixins.ListModelMixin,
                    mixins.DestroyModelMixin,
                    viewsets.GenericViewSet):
+    """Обработчик жанров произведений."""
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     filter_backends = (filters.SearchFilter,)
@@ -189,6 +194,7 @@ class CategoryViewSet(mixins.CreateModelMixin,
                       mixins.ListModelMixin,
                       mixins.DestroyModelMixin,
                       viewsets.GenericViewSet):
+    """Обработчик категории произведений."""
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     search_fields = ('name',)
@@ -214,23 +220,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
         serializer.save(author=self.request.user, title=title)
 
-    # def perform_create(self, serializer):
-    #     title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-    #     try:
-    #         serializer.save(author=self.request.user, title=title)
-    #     except IntegrityError:
-    #         raise ValidationError('подписка на самого себя')
-
-    # def perform_update(self, serializer):
-    #     title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-    #     # сохранить имя автора, если правит не он
-    #     review_id = self.kwargs.get('pk')
-    #     author = Review.objects.get(pk=review_id).author
-    #     serializer.save(
-    #         author=author,
-    #         title_id=title.id
-    #     )
-
 
 class CommentViewSet(viewsets.ModelViewSet):
     """Обработчик запросов к модели Comment."""
@@ -246,17 +235,3 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
         serializer.save(author=self.request.user, review_id=review.id)
-
-    # def perform_destroy(self, instance):
-    #     review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
-    #     instance
-
-    # def perform_update(self, serializer):
-    #     review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
-    #     # сохранить имя автора, если правит не он
-    #     comment_id = self.kwargs.get('pk')
-    #     author = Comment.objects.get(pk=comment_id).author
-    #     serializer.save(
-    #         author=author,
-    #         review_id=review.id
-    #     )

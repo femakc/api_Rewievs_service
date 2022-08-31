@@ -155,6 +155,7 @@ class GetTokenSerializer(serializers.Serializer):
 
 
 class GenreSerializer(serializers.ModelSerializer):
+    """Сериализатор модели Genre"""
 
     class Meta:
         fields = ('name', 'slug')
@@ -163,6 +164,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    """Сериализатор модели Category"""
 
     class Meta:
         fields = ('name', 'slug')
@@ -171,6 +173,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class TitleReadSerializer(serializers.ModelSerializer):
+    """Сериализатор модели Title"""
     category = CategorySerializer(read_only=True)
     genre = GenreSerializer(many=True)
     rating = serializers.IntegerField(read_only=True)
@@ -183,6 +186,7 @@ class TitleReadSerializer(serializers.ModelSerializer):
 
 
 class TitleWriteSerializer(serializers.ModelSerializer):
+    """Сериализатор модели Title"""
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug'
@@ -211,16 +215,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username'
     )
-    # score = serializers.IntegerField(
-    #     validators=(
-    #         MinValueValidator(1),
-    #         MaxValueValidator(10)
-    #     )
-    # )
-    # title = serializers.SlugRelatedField(
-    #     read_only=True,
-    #     slug_field='title'
-    # )
 
     class Meta:
         fields = ('id', 'text', 'author', 'score', 'pub_date',)
@@ -242,10 +236,6 @@ class CommentSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username'
     )
-    # review = serializers.SlugRelatedField(
-    #     read_only=True,
-    #     slug_field='review'
-    # )
 
     class Meta:
         fields = ('id', 'text', 'author', 'pub_date')

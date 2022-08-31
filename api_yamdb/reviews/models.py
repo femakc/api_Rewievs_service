@@ -3,18 +3,27 @@ from users.models import User
 
 
 class Category(models.Model):
+    """Категории произведений: «Книги», «Фильмы», «Музыка».
+    Список категорий может быть расширен администратором
+    """
     name = models.CharField('Категория', max_length=200)
     slug = models.SlugField(unique=True)
     description = models.TextField()
 
 
 class Genre(models.Model):
+    """Жанр произведения:«Сказка», «Рок» или «Артхаус».
+    Новые жанры может Добавлять только администратор.
+    """
     name = models.CharField('Жанр', max_length=200)
     slug = models.SlugField(unique=True)
     description = models.TextField()
 
 
 class Title(models.Model):
+    """Основное произведение, на который пишется отзыв.
+    Наполнение доступно администратору.
+    """
     name = models.CharField('Название', max_length=200)
     year = models.IntegerField(default=2000)
     description = models.TextField(default='')
@@ -26,7 +35,11 @@ class Title(models.Model):
 
 
 class Review(models.Model):
-    """Отзывы пользователей на контент"""
+    """Отзывы пользователей на контент.
+    Пользователь может оставить лишь один отзыв на произведение.
+    Только хозяин отзыва может редактировать отзыв.
+    Модератор может менять текст и оценку или удалять полностью объект.
+    Администратор - как модератор."""
 
     SCORE_CHOICES = (
         (1, '1. Очень плохо. Не понравилось совсем.'),
@@ -57,15 +70,25 @@ class Review(models.Model):
         )
     pub_date = models.DateTimeField(auto_now_add=True,
         verbose_name='Дата создания отзыва')
-    
+
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(
+                fields=['title', 'author'], name='title_one_review'
+            ),
+        )
+
     def __str__(self):
         return (
-            f'{self.author.username}, {self.text}, {self.score}, {self.pub_date}'
+            f'{self.author.username}, {self.text[:30]}, {self.score}'
         )
 
 
 class Comment(models.Model):
-    """Комментарии пользователя на отзыв."""
+    """Комментарии пользователя на отзыв.
+    Только хозяин коммента может редактировать коммент.
+    Модератор может менять текст или удалять полностью объект.
+    Администратор - как модератор."""
     review = models.ForeignKey(
         Review, on_delete=models.CASCADE,
         blank=True,
@@ -83,4 +106,4 @@ class Comment(models.Model):
         verbose_name='Дата создания комментария')
 
     def __str__(self):
-        return (f'{self.author.username}, {self.text}')
+        return (f'{self.author.username}, {self.text[:30]}')
