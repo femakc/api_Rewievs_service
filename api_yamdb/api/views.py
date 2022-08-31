@@ -19,29 +19,6 @@ class SignUpViewSet(viewsets.ModelViewSet):
     serializer_class = SignUpSerializer
     permission_classes = (AllowAny,)
 
-    def perform_create(self, serializer):
-        # print('def create')
-        # print(self.kwargs)
-        # print(serializer.validated_data)
-        confirmation_code = random.randint(1, 1000000)
-        serializer.validated_data['confirmation_code'] = confirmation_code
-        # print(serializer.validated_data)
-        serializer.is_valid(raise_exception=True)
-        # print('валидный serializer')
-        username = serializer.validated_data.get('username')
-        email = serializer.validated_data.get('email')
-        # print(username, email, confirmation_code)
-        is_registered = User.objects.filter(email=email, username=username)
-        if not is_registered.exists():
-            # print('new user')
-            serializer.is_valid(raise_exception=True)
-            # print(serializer.validated_data)
-            serializer.save(
-                username=username,
-                email=email,
-                confirmation_code=confirmation_code
-            )
-
     def create(self, request, *args, **kwargs):
         # print("зашли в create")
         request = request.data.copy()
