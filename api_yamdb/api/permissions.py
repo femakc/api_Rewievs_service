@@ -20,7 +20,7 @@ class IsAdminRole(permissions.BasePermission):
 
 
 class IsOwnerPatch(permissions.BasePermission):
-    """ 
+    """
     Только владелец.
     """
     def has_permission(self, request, view):
@@ -34,4 +34,3 @@ class IsOwnerPatch(permissions.BasePermission):
             request.method == "PATCH"
             or obj.author == request.user
         )
-        

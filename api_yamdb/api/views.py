@@ -19,38 +19,43 @@ class SignUpViewSet(viewsets.ModelViewSet):
     serializer_class = SignUpSerializer
     permission_classes = (AllowAny,)
 
-    def create(self, request, *args, **kwargs):
-        # print("зашли в create")
-        request = request.data.copy()
-        # print(request)
-        serializer = self.get_serializer(data=request)
-        serializer.is_valid(raise_exception=True)
-        # print(kwargs)
-        # print(request)
+    def perform_create(self, serializer):
+        print('def create')
+        print(self.kwargs)
+        print(serializer.validated_data)
         confirmation_code = random.randint(1, 1000000)
-        request['confirmation_code'] = confirmation_code
-        # print(request)
+        serializer.validated_data['confirmation_code'] = confirmation_code
+        print(serializer.validated_data)
         serializer.is_valid(raise_exception=True)
-        # print('валидный serializer')
-        username = request.get('username')
-        email = request.get('email')
-        # print(username, email, confirmation_code)
+        print('валидный serializer')
+        username = serializer.validated_data.get('username')
+        email = serializer.validated_data.get('email')
+        print(username, email, confirmation_code)
         is_registered = User.objects.filter(email=email, username=username)
         if not is_registered.exists():
-            # print('new user')
+            print('new user')
             serializer.is_valid(raise_exception=True)
-            # print(request)
-            self.perform_create(serializer)
-            # print("new user, отправляем письмо")
+            print(serializer.validated_data)
+            serializer.save(
+                username=username,
+                email=email,
+                confirmation_code=confirmation_code
+            )
+            print("new user")
             send_mesege(username)
-            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            # print("пользователь есть, отправляем письмо")
             send_mesege(username)
-            serializer.is_valid(raise_exception=True)
-            # print(request)
-            self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            print("пользователь есть")
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK,
+            headers=headers)
 
 
 class GetTokenView(views.TokenObtainSlidingView):
