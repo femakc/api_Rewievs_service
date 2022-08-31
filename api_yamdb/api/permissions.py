@@ -61,11 +61,13 @@ class IsOwnerPatch(permissions.BasePermission):
 
 class AdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        if request.user.is_authenticated:
-            return request.user.role == 'admin'
-        return False
+        if request.user.is_anonymous:
+            return request.method in permissions.SAFE_METHODS
+        else:
+            return (
+                request.method in permissions.SAFE_METHODS
+                or request.user.role == 'admin'
+            )
 
 
 class IsAuthorOrReadOnly(permissions.BasePermission):

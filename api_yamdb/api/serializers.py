@@ -201,12 +201,17 @@ class TitleWriteSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Title
 
-    # def validate(self, value):
-    #     now = datetime.datetime.now()
-    #     if value['year'] > now.year:
-    #         raise serializers.ValidationError(
-    #             'год выпуска не может быть больше текущего')
-    #     return value
+    def validate(self, value):
+        now = datetime.datetime.now()
+        year = value.get('year')
+        if year:
+            if value['year'] > now.year:
+                raise serializers.ValidationError(
+                    'год выпуска не может быть больше текущего')
+        else:
+            raise serializers.ValidationError(
+                    'нет поля - год выпуска')
+        return value
 
 
 class ReviewSerializer(serializers.ModelSerializer):
