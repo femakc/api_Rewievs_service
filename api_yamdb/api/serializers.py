@@ -1,45 +1,64 @@
 from collections import OrderedDict
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
-from django.utils import timezone
 from rest_framework import exceptions, serializers
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.tokens import AccessToken
-from reviews.models import Category, Comment, Genre, Review, Title
-# from reviews.models import Title, Genre, Category
 from users.models import User
+
+from .send_email import send_mesege
 
 
 class SignUpSerializer(serializers.ModelSerializer):
     """ Сериализатор для SignUp """
+    username = serializers.SlugField(
+        max_length=50,
+        min_length=None,
+        allow_blank=False
+    )
+    email = serializers.EmailField()
 
     class Meta:
         model = User
         fields = (
             'username',
             'email',
-            'confirmation_code',
         )
-        # validators = [
-        #     UniqueTogetherValidator(
-        #         queryset=User.objects.all(),
-        #         fields=('username', 'email'),
-        #         message='Имя пользователя или email уже используются'
-        #     )
-        # ]
 
-    # def validate(self, attrs):
-    #     return super().validate(attrs)
+    def validate(self, data):
+        # print('singUp validate!!!')
+        # print(data)
+        # print(data['email'])
+        if data['username'] == 'me':
+            raise serializers.ValidationError(
+                "Имя пользователя не может быть 'me' "
+            )
+        user = User.objects.filter(email=data['email'])
+        # print(user)
+        if user:
+            print("User с таким email существует проверяем username")
+            username = User.objects.filter(
+                username=data['username'],
+                email=data['email']
+            )
+            # print(username)
+            if username:
+                # print("отправляем письмо")
+                send_mesege(data['username'])
+            else:
+                raise serializers.ValidationError(
+                    "user не соответсятвует email"
+                )
+        else:
+            # print("User с таким email НЕ существует проверяем username")
+            username = User.objects.filter(username=data['username'])
+            # print(username)
+            if username:
+                raise serializers.ValidationError(
+                    "email НЕ соответствуе User "
+                )
 
-    # def validate(self, data):
-    #     print(data)
-    #     user = User.objects.filter(username=data.username, email=data.email)
-    #     print(user)
-    #     if not user:
-    #         raise serializers.ValidationError("Тарам пам пам")
-
-    #     return data
+        return data
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -64,12 +83,20 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     """ Сериализаторор для модели Post."""
+class UserMeSerializer(serializers.ModelSerializer):
+    # print('userMe serializer')
 
-#     class Meta:
-#         model = CustomUser
-#         fields = ('__all__')
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'bio',
+            'role'
+        )
+
 
 class GetTokenSerializer(serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD
@@ -88,24 +115,27 @@ class GetTokenSerializer(serializers.Serializer):
         self.fields["confirmation_code"] = serializers.CharField()
 
     def validate(self, attrs):
-        print(attrs)
+        # print(attrs)
         username = attrs.get('username')
         confirmation_code = attrs.get('confirmation_code')
-        print(username, confirmation_code)
+        is_user = User.objects.filter(
+            username=username
+        ).exists()
+        if not is_user:
+            raise exceptions.NotFound(
+                "нету такого узера"
+            )
         user = User.objects.get(username=username)
-        print(user)
-        confirm_code = user.confirmation_code # надо поправит 
-        print(confirm_code)
+        # print(user)
+        confirm_code = user.confirmation_code
+        # print(confirm_code)
         token = self.get_token(user)
         data = OrderedDict()
         data["token"] = str(token)
-
         if confirmation_code != confirm_code:
-            raise exceptions.AuthenticationFailed(
-                self.error_messages["no_active_account"],
-                "no_active_account",
+            raise exceptions.ValidationError(
+                "Confirmation_code не совпадает с тем что в базе"
             )
-
         authenticate_kwargs = {
             self.username_field: attrs[self.username_field],
             "confirmation_code": attrs["confirmation_code"],
