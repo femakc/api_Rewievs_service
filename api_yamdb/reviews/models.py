@@ -68,32 +68,28 @@ class Review(models.Model):
     )
 
     def __str__(self):
-        # return self.text
-        return (f'{self.author.username}, {self.text}, {self.score}')
+        return (
+            f'{self.author.username}, {self.text}, {self.score}, {self.pub_date}'
+        )
 
 
 class Comment(models.Model):
     """Комментарии пользователя на отзыв."""
     review = models.ForeignKey(
         Review, on_delete=models.CASCADE,
+        blank=True,
+        null=True,
         related_name='comments',
         verbose_name='Комментируемый отзыв'
     )
-    text = models.TextField(
-        max_length=5000,
-        verbose_name='Текст комментария'
-    )
+    text = models.TextField(max_length=5000,
+        verbose_name='Текст комментария')
     author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
+        User, on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name='Автор комментария'
-    )
-    pub_date = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата создания комментария'
-    )
+        verbose_name='Автор комментария')
+    pub_date = models.DateTimeField(auto_now_add=True,
+        verbose_name='Дата создания комментария')
 
     def __str__(self):
-        # return self.text
         return (f'{self.author.username}, {self.text}')
