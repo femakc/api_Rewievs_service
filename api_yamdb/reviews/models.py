@@ -1,6 +1,4 @@
-from django.core import validators
 from django.db import models
-
 from users.models import User
 
 
@@ -59,16 +57,11 @@ class Review(models.Model):
         )
     pub_date = models.DateTimeField(auto_now_add=True,
         verbose_name='Дата создания отзыва')
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['author', 'title'],
-                name='unique review')
-        ]
     
     def __str__(self):
-        return (f'{self.author.username}, {self.text}, {self.score}, {self.pub_date}')
+        return (
+            f'{self.author.username}, {self.text}, {self.score}, {self.pub_date}'
+        )
 
 
 class Comment(models.Model):

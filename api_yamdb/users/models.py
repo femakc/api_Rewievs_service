@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
+
 CHOICES = (
     ('anon', 'Аноним'),
     ('user', 'Аутентифицированный пользователь'),
@@ -12,6 +13,7 @@ CHOICES = (
 
 class User(AbstractUser):
     username = models.CharField(max_length=100, unique=True)
+    email = models.EmailField(unique=True)
     confirmation_code = models.CharField(max_length=32)
     bio = models.TextField('Биография', default='', blank=True, null=True,)
     role = models.CharField(
@@ -23,13 +25,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return str(self.username)
-
-    # @property
-    # def is_staff(self):
-
-    #     # Is the user a member of staff?"
-    #     # Simplest possible answer: All admins are staff
-    #     return self.is_admin
 
 
 class UserManager(BaseUserManager):
@@ -53,22 +48,15 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password, **extra_fields):
         print('зашли в create_superuser')
-        # """
-        # Creates and saves a superuser with the given email, date of
-        # birth and password.
-        # """
-        # user = self.create_user(
-        #     email,
-        #     # username=username,
-        #     password=password,
-        # )
-        # user.is_admin = True
-        # user.save(using=self._db)
-        # return user
+        """
+        Creates and saves a superuser with the given email, date of
+        birth and password.
+        """
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('role', 'admin')  # вот ради этой строчки все и создается
+        extra_fields.setdefault('role', 'admin') 
+        # вот ради этой строчки все и создается
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError(_('Superuser must have is_staff=True.'))
