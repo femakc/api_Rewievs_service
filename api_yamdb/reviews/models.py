@@ -1,4 +1,5 @@
 from django.db import models
+from reviews.validators import validate_year
 
 
 class Category(models.Model):
@@ -19,7 +20,8 @@ class Review(models.Model):
 
 class Title(models.Model):
     name = models.CharField('Название', max_length=200)
-    year = models.IntegerField(default=2000)
+    year = models.IntegerField(default=2000,
+                               validators=[validate_year])
     description = models.TextField(default='')
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, related_name='categories',

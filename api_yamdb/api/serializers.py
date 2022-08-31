@@ -52,12 +52,6 @@ class TitleWriteSerializer(serializers.ModelSerializer):
         slug_field='slug',
         many=True
     )
-    def validate(self, value):
-        now = datetime.datetime.now()
-        if value['year'] > now.year:
-            raise serializers.ValidationError(
-                'год выпуска не может быть больше текущего')
-        return value
 
     class Meta:
         fields = '__all__'
