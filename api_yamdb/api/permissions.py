@@ -44,7 +44,7 @@ class IsAdminRole(permissions.BasePermission):
 
 
 class IsOwnerPatch(permissions.BasePermission):
-    """ 
+    """
     Только владелец.
     """
     def has_permission(self, request, view):
@@ -62,8 +62,10 @@ class IsOwnerPatch(permissions.BasePermission):
 
 class AdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS or request.user.role == 'admin':
+        if request.method in permissions.SAFE_METHODS:
             return True
+        if request.user.is_authenticated:
+            return request.user.role == 'admin'
         return False
 
 

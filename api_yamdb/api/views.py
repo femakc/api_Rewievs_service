@@ -141,7 +141,7 @@ class CategoryFilter(django_filters.FilterSet):
 
 
 class TitleFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(field_name='name')
+    name = django_filters.CharFilter(field_name='name', lookup_expr='contains')
     genre = django_filters.CharFilter(field_name='genre__slug')
     category = django_filters.CharFilter(field_name='category__slug')
     year = django_filters.NumberFilter(field_name='year')
@@ -156,12 +156,13 @@ class TitleViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
     pagination_class = LimitOffsetPagination
+    permission_classes = (AdminOrReadOnly,)
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
             return TitleReadSerializer
         return TitleWriteSerializer
-    
+
     def get_queryset(self):
         if self.action in ('list', 'retrieve'):
             queryset = (Title.objects.prefetch_related('reviews').all().

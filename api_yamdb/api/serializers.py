@@ -173,7 +173,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class TitleReadSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     genre = GenreSerializer(many=True)
-    rating = serializers.IntegerField()
+    rating = serializers.IntegerField(read_only=True)
 
     class Meta:
         fields = (
@@ -196,13 +196,13 @@ class TitleWriteSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Title
-    
-    def validate(self, value):
-        now = datetime.datetime.now()
-        if value['year'] > now.year:
-            raise serializers.ValidationError(
-                'год выпуска не может быть больше текущего')
-        return value
+
+    # def validate(self, value):
+    #     now = datetime.datetime.now()
+    #     if value['year'] > now.year:
+    #         raise serializers.ValidationError(
+    #             'год выпуска не может быть больше текущего')
+    #     return value
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -221,7 +221,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     #     read_only=True,
     #     slug_field='title'
     # )
-    
+
     class Meta:
         fields = ('id', 'text', 'author', 'score', 'pub_date',)
         model = Review
