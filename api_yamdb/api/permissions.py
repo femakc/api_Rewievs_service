@@ -18,10 +18,6 @@ class IsOwnerOrAdmin(permissions.BasePermission):
             return True
 
         return request.user.is_staff
-        # return (
-        #     request.method in permissions.SAFE_METHODS
-        #     or obj.author == request.user
-        # )
 
 
 class IsAdminRole(permissions.BasePermission):

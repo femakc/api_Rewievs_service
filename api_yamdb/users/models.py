@@ -1,14 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-
-
-CHOICES = (
-    ('anon', 'Аноним'),
-    ('user', 'Аутентифицированный пользователь'),
-    ('moderator', 'Модератор'),
-    ('admin', 'Администратор'),
-    ('superuser', 'Суперюзер Django'),
-)
+from api_yamdb.settings import ROLES
 
 
 class User(AbstractUser):
@@ -19,7 +11,7 @@ class User(AbstractUser):
     role = models.CharField(
         'Роль пользователя',
         max_length=32,
-        choices=CHOICES,
+        choices=ROLES,
         default='user'
     )
 
@@ -28,7 +20,6 @@ class User(AbstractUser):
 
 
 class UserManager(BaseUserManager):
-    # print('зашли в user manager ')
 
     def create_user(self, email, username, password=None):
         """
@@ -47,7 +38,6 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, **extra_fields):
-        # print('зашли в create_superuser')
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -56,7 +46,6 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('role', 'admin')
-        # вот ради этой строчки все и создается
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')

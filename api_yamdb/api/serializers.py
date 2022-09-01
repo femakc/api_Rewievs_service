@@ -27,33 +27,25 @@ class SignUpSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        # print('singUp validate!!!')
-        # print(data)
-        # print(data['email'])
         if data['username'] == 'me':
             raise serializers.ValidationError(
                 "Имя пользователя не может быть 'me' "
             )
         user = User.objects.filter(email=data['email'])
-        # print(user)
         if user:
             print("User с таким email существует проверяем username")
             username = User.objects.filter(
                 username=data['username'],
                 email=data['email']
             )
-            # print(username)
             if username:
-                # print("отправляем письмо")
                 send_mesege(data['username'])
             else:
                 raise serializers.ValidationError(
                     "user не соответсятвует email"
                 )
         else:
-            # print("User с таким email НЕ существует проверяем username")
             username = User.objects.filter(username=data['username'])
-            # print(username)
             if username:
                 raise serializers.ValidationError(
                     "email НЕ соответствуе User "
@@ -85,7 +77,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserMeSerializer(serializers.ModelSerializer):
-    # print('userMe serializer')
 
     class Meta:
         model = User
@@ -116,7 +107,6 @@ class GetTokenSerializer(serializers.Serializer):
         self.fields["confirmation_code"] = serializers.CharField()
 
     def validate(self, attrs):
-        # print(attrs)
         username = attrs.get('username')
         confirmation_code = attrs.get('confirmation_code')
         is_user = User.objects.filter(
@@ -127,9 +117,7 @@ class GetTokenSerializer(serializers.Serializer):
                 "нету такого узера"
             )
         user = User.objects.get(username=username)
-        # print(user)
         confirm_code = user.confirmation_code
-        # print(confirm_code)
         token = self.get_token(user)
         data = OrderedDict()
         data["token"] = str(token)
