@@ -28,7 +28,7 @@ class User(AbstractUser):
 
 
 class UserManager(BaseUserManager):
-    print('зашли в user manager ')
+    # print('зашли в user manager ')
 
     def create_user(self, email, username, password=None):
         """
@@ -47,7 +47,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, **extra_fields):
-        print('зашли в create_superuser')
+        # print('зашли в create_superuser')
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
