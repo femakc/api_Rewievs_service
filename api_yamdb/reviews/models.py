@@ -58,8 +58,10 @@ class Review(models.Model):
         related_name='reviews',
         verbose_name='Рецензируемое произведение'
     )
-    text = models.TextField(max_length=5000,
-        verbose_name='Текст отзыва')
+    text = models.TextField(
+        max_length=5000,
+        verbose_name='Текст отзыва'
+    )
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='reviews',
@@ -67,9 +69,11 @@ class Review(models.Model):
     score = models.IntegerField(
         choices=SCORE_CHOICES,
         verbose_name='Рейтинг',
-        )
-    pub_date = models.DateTimeField(auto_now_add=True,
-        verbose_name='Дата создания отзыва')
+    )
+    pub_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата создания отзыва'
+    )
 
     class Meta:
         constraints = (
@@ -96,14 +100,18 @@ class Comment(models.Model):
         related_name='comments',
         verbose_name='Комментируемый отзыв'
     )
-    text = models.TextField(max_length=5000,
-        verbose_name='Текст комментария')
+    text = models.TextField(
+        max_length=5000,
+        verbose_name='Текст комментария'
+    )
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='Автор комментария')
-    pub_date = models.DateTimeField(auto_now_add=True,
-        verbose_name='Дата создания комментария')
+    pub_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата создания комментария'
+    )
 
     def __str__(self):
         return (f'{self.author.username}, {self.text[:30]}')
