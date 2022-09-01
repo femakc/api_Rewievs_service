@@ -1,4 +1,3 @@
-import datetime
 from collections import OrderedDict
 
 from django.contrib.auth import get_user_model
@@ -186,7 +185,6 @@ class TitleReadSerializer(serializers.ModelSerializer):
 
 
 class TitleWriteSerializer(serializers.ModelSerializer):
-    """Сериализатор модели Title"""
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug'
@@ -200,18 +198,6 @@ class TitleWriteSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Title
-
-    def validate(self, value):
-        now = datetime.datetime.now()
-        year = value.get('year')
-        if year:
-            if value['year'] > now.year:
-                raise serializers.ValidationError(
-                    'год выпуска не может быть больше текущего')
-        else:
-            raise serializers.ValidationError(
-                    'нет поля - год выпуска')
-        return value
 
 
 class ReviewSerializer(serializers.ModelSerializer):
