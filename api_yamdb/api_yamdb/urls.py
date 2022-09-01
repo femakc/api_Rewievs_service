@@ -3,7 +3,7 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('', include('api.urls', namespace='api')),
+    path('api/', include('api.urls', namespace='api')),
     path('admin/', admin.site.urls),
     path(
         'redoc/',

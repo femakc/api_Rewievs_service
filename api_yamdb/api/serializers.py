@@ -27,28 +27,28 @@ class SignUpSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        if data['username'] == 'me':
+        if data['username'].lower() == 'me':
             raise serializers.ValidationError(
                 "Имя пользователя не может быть 'me' "
             )
         user = User.objects.filter(email=data['email'])
-        if user:
+        if user.exists():
             print("User с таким email существует проверяем username")
             username = User.objects.filter(
                 username=data['username'],
                 email=data['email']
             )
-            if username:
+            if username.exists():
                 send_mesege(data['username'])
             else:
                 raise serializers.ValidationError(
-                    "user не соответсятвует email"
+                    "user не соответствует email"
                 )
         else:
             username = User.objects.filter(username=data['username'])
-            if username:
+            if username.exists():
                 raise serializers.ValidationError(
-                    "email НЕ соответствуе User "
+                    "email не соответствует User "
                 )
 
         return data
@@ -125,14 +125,6 @@ class GetTokenSerializer(serializers.Serializer):
             raise exceptions.ValidationError(
                 "Confirmation_code не совпадает с тем что в базе"
             )
-        authenticate_kwargs = {
-            self.username_field: attrs[self.username_field],
-            "confirmation_code": attrs["confirmation_code"],
-        }
-        try:
-            authenticate_kwargs["request"] = self.context["request"]
-        except KeyError:
-            pass
 
         return data
 
