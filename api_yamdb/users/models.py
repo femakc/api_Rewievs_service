@@ -4,15 +4,29 @@ from api_yamdb.settings import ROLES
 
 
 class User(AbstractUser):
-    username = models.CharField(max_length=100, unique=True)
+    username = models.CharField(
+        max_length=100,
+        unique=True
+    )
     email = models.EmailField(unique=True)
-    confirmation_code = models.CharField(max_length=32)
-    bio = models.TextField('Биография', default='', blank=True, null=True,)
+    confirmation_code = models.CharField(
+        max_length=32,
+        verbose_name='код подтверждения',
+        help_text='код'
+    )
+    bio = models.TextField(
+        default='',
+        blank=True,
+        null=True,
+        verbose_name='Биография',
+        help_text='Биография пользователя'
+    )
     role = models.CharField(
-        'Роль пользователя',
         max_length=32,
         choices=ROLES,
-        default='user'
+        default='user',
+        verbose_name='Роль пользователя',
+        help_text='роль'
     )
 
     def __str__(self):
