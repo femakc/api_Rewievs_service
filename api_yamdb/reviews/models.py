@@ -8,8 +8,8 @@ class Category(models.Model):
     """Категории произведений: «Книги», «Фильмы», «Музыка».
     Список категорий может быть расширен администратором
     """
-    name = models.CharField('Категория', max_length=200)
-    slug = models.SlugField(unique=True)
+    name = models.CharField('Категория', max_length=256)
+    slug = models.SlugField(unique=True, max_length=50)
     description = models.TextField()
 
 
@@ -17,8 +17,8 @@ class Genre(models.Model):
     """Жанр произведения:«Сказка», «Рок» или «Артхаус».
     Новые жанры может Добавлять только администратор.
     """
-    name = models.CharField('Жанр', max_length=200)
-    slug = models.SlugField(unique=True)
+    name = models.CharField('Жанр', max_length=256)
+    slug = models.SlugField(unique=True, max_length=50)
     description = models.TextField()
 
 
@@ -26,7 +26,7 @@ class Title(models.Model):
     """Основное произведение, на который пишется отзыв.
     Наполнение доступно администратору.
     """
-    name = models.CharField('Название', max_length=200)
+    name = models.CharField('Название', max_length=256)
     year = models.IntegerField(
         default=2000,
         validators=[validate_year]
