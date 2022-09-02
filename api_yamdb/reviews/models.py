@@ -117,6 +117,8 @@ class Review(models.Model):
     )
 
     class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
         ordering = ['-pub_date']# добавили сортировку
         constraints = (
             models.UniqueConstraint(
@@ -157,3 +159,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return (f'{self.author.username}, {self.text[:30]}')
+
+    class Meta:
+        verbose_name = 'Комментарии'
+        verbose_name_plural = 'Комментарий'
