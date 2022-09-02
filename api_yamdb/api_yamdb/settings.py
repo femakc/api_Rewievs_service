@@ -116,11 +116,13 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+ADMIN_ROLE = 'admin'
+MODERATOR_ROLE = 'moderator'
 ROLES = (
     ('anon', 'Аноним'),
     ('user', 'Аутентифицированный пользователь'),
-    ('moderator', 'Модератор'),
-    ('admin', 'Администратор'),
+    (MODERATOR_ROLE, 'Модератор'),
+    (ADMIN_ROLE, 'Администратор'),
     ('superuser', 'Суперюзер Django'),
 )
 
