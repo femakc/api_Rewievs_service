@@ -146,7 +146,7 @@ class CategorySerializer(serializers.ModelSerializer):
     """Сериализатор модели Category"""
 
     class Meta:
-        exclude = ('id', 'description')
+        exclude = ('id', 'description')# добавил поле exclude
         model = Category
         lookup_field = 'slug'
 

@@ -15,6 +15,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt import views
 from reviews.models import Category, Genre, Review, Title
 from users.models import User
+from .filters import TitleFilter
+from .mixins import GetPostDelMixin
 
 from .permissions import IsAdminRole, IsAuthorOrReadOnly, IsOwnerPatch
 from .send_email import send_mesege
@@ -97,29 +99,6 @@ class UserVievSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class CategoryFilter(django_filters.FilterSet):
-    """Обработчик категорий произведений."""
-    category = django_filters.CharFilter(
-        field_name='name', lookup_expr='contains'
-    )
-
-    class Meta:
-        model = Category
-        fields = ['category']
-
-
-class TitleFilter(django_filters.FilterSet):
-    """Обработчик фильтрации произведений."""
-    name = django_filters.CharFilter(field_name='name', lookup_expr='contains')
-    genre = django_filters.CharFilter(field_name='genre__slug')
-    category = django_filters.CharFilter(field_name='category__slug')
-    year = django_filters.NumberFilter(field_name='year')
-
-    class Meta:
-        model = Title
-        fields = ['name', 'genre', 'category', 'year']
-
-
 class TitleViewSet(viewsets.ModelViewSet):
     """Обработчик самих произведений."""
     queryset = Title.objects.all()
@@ -142,10 +121,7 @@ class TitleViewSet(viewsets.ModelViewSet):
         return Title.objects.all()
 
 
-class GenreViewSet(mixins.CreateModelMixin,
-                   mixins.ListModelMixin,
-                   mixins.DestroyModelMixin,
-                   viewsets.GenericViewSet):
+class GenreViewSet(GetPostDelMixin):
     """Обработчик жанров произведений."""
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
@@ -156,10 +132,7 @@ class GenreViewSet(mixins.CreateModelMixin,
     pagination_class = LimitOffsetPagination
 
 
-class CategoryViewSet(mixins.CreateModelMixin,
-                      mixins.ListModelMixin,
-                      mixins.DestroyModelMixin,
-                      viewsets.GenericViewSet):
+class CategoryViewSet(GetPostDelMixin):
     """Обработчик категории произведений."""
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
