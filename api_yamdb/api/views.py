@@ -19,7 +19,7 @@ from .filters import TitleFilter
 from .mixins import GetPostDelMixin
 
 from .permissions import IsAdminRole, IsAuthorOrReadOnly, IsOwnerPatch
-from .send_email import send_mesege
+from .send_email import send_message
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, GetTokenSerializer,
                           ReviewSerializer, SignUpSerializer,
@@ -46,9 +46,9 @@ class SignUpViewSet(viewsets.ModelViewSet):
                 email=email,
                 confirmation_code=confirmation_code
             )
-            send_mesege(username)
+            send_message(username)
         else:
-            send_mesege(username)
+            send_message(username)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
