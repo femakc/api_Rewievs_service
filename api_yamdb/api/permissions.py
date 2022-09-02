@@ -1,5 +1,7 @@
 from rest_framework import permissions
+
 from api_yamdb.settings import ADMIN_ROLE, MODERATOR_ROLE
+
 
 class IsOwnerOrAdmin(permissions.BasePermission):
     """
@@ -11,30 +13,21 @@ class IsOwnerOrAdmin(permissions.BasePermission):
             or request.user.is_authenticated
         )
 
-    def has_object_permission(self, request, view, obj):
-
-        if request.method == 'PATH' or obj.username == request.user:
-            print('PATH user=request user')
-            return True
-
-        return request.user.is_staff
-
 
 class IsAdminRole(permissions.BasePermission):
     """
     IsAdmin or Superuser permission .
     """
     def has_permission(self, request, view):
-        print(request.user)
         return (
-            request.user.role == 'admin'
-            or request.user.is_superuser is True
+            request.user.role == ADMIN_ROLE
+            or request.user.is_superuser
         )
 
     def has_object_permission(self, request, view, obj):
         return (
             request.user.role == ADMIN_ROLE
-            or request.user.is_superuser is True
+            or request.user.is_superuser
         )
 
 

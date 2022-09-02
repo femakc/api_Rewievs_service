@@ -33,7 +33,6 @@ class SignUpSerializer(serializers.ModelSerializer):
             )
         user = User.objects.filter(email=data['email'])
         if user.exists():
-            print("User с таким email существует проверяем username")
             username = User.objects.filter(
                 username=data['username'],
                 email=data['email']
@@ -137,7 +136,7 @@ class GenreSerializer(serializers.ModelSerializer):
     """Сериализатор модели Genre"""
 
     class Meta:
-        fields = ('name', 'slug')
+        exclude = ('id', 'description')
         model = Genre
         lookup_field = 'slug'
 
@@ -146,7 +145,7 @@ class CategorySerializer(serializers.ModelSerializer):
     """Сериализатор модели Category"""
 
     class Meta:
-        exclude = ('id', 'description')# добавил поле exclude
+        exclude = ('id', 'description')
         model = Category
         lookup_field = 'slug'
 

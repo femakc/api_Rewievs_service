@@ -1,17 +1,5 @@
 import django_filters
-
-from reviews.models import Category, Title
-
-
-#class CategoryFilter(django_filters.FilterSet): #зачем нам этот фильтр?
-    #"""Обработчик категорий произведений."""
-    #category = django_filters.CharFilter(
-    #    field_name='name', lookup_expr='contains'
-    #)
-#
-    #class Meta:
-    #    model = Category
-    #    fields = ['category'] зачем нам этот фильтр?
+from reviews.models import Title
 
 
 class TitleFilter(django_filters.FilterSet):

@@ -5,4 +5,5 @@ class GetPostDelMixin(mixins.CreateModelMixin,
                       mixins.ListModelMixin,
                       mixins.DestroyModelMixin,
                       viewsets.GenericViewSet):
+    """Mixin для наследования."""
     pass

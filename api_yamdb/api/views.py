@@ -1,12 +1,10 @@
-# import random
 import uuid
 
-import django_filters
 from api.permissions import AdminOrReadOnly
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, mixins, status, viewsets
+from rest_framework import filters, status, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
@@ -103,7 +101,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     """Обработчик самих произведений."""
     queryset = (Title.objects.prefetch_related('reviews').all().
                 annotate(rating=Avg('reviews__score')).
-                order_by('name')) #Изменен queryset
+                order_by('name'))
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
     pagination_class = LimitOffsetPagination
@@ -113,14 +111,6 @@ class TitleViewSet(viewsets.ModelViewSet):
         if self.action in ('list', 'retrieve'):
             return TitleReadSerializer
         return TitleWriteSerializer
-
-    # def get_queryset(self):
-    #     if self.action in ('list', 'retrieve'):
-    #         queryset = (Title.objects.prefetch_related('reviews').all().
-    #                     annotate(rating=Avg('reviews__score')).
-    #                     order_by('name'))
-    #         return queryset
-    #     return Title.objects.all()
 
 
 class GenreViewSet(GetPostDelMixin):
@@ -150,7 +140,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     pagination_class = LimitOffsetPagination
-    # queryset = Review.objects.all()
 
     def get_queryset(self):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
