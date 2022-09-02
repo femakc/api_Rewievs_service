@@ -1,5 +1,5 @@
 from rest_framework import permissions
-
+from api_yamdb.settings import ADMIN_ROLE, MODERATOR_ROLE
 
 class IsOwnerOrAdmin(permissions.BasePermission):
     """
@@ -33,7 +33,7 @@ class IsAdminRole(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return (
-            request.user.role == 'admin'
+            request.user.role == ADMIN_ROLE
             or request.user.is_superuser is True
         )
 
@@ -62,7 +62,7 @@ class AdminOrReadOnly(permissions.BasePermission):
         else:
             return (
                 request.method in permissions.SAFE_METHODS
-                or request.user.role == 'admin'
+                or request.user.role == ADMIN_ROLE
             )
 
 
@@ -79,6 +79,6 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
         return (
             request.method in permissions.SAFE_METHODS
             or obj.author == request.user
-            or request.user.role == 'admin'
-            or request.user.role == 'moderator'
+            or request.user.role == ADMIN_ROLE
+            or request.user.role == MODERATOR_ROLE
         )
