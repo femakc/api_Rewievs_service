@@ -8,7 +8,7 @@ class Category(models.Model):
     """Категории произведений: «Книги», «Фильмы», «Музыка».
     Список категорий может быть расширен администратором
     """
-    name = models.CharField('Категория', max_length=256,
+    name = models.CharField(max_length=256,
                             verbose_name='Название категории')
     slug = models.SlugField(unique=True, max_length=50,
                             verbose_name='slug категории')
@@ -17,14 +17,14 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
-        # добавил verbose_name и verbose_name_plural в Мета классе
+        # добавил verbose_name и verbose_name_plural в Мета классе и в поле
 
 
 class Genre(models.Model):
     """Жанр произведения:«Сказка», «Рок» или «Артхаус».
     Новые жанры может Добавлять только администратор.
     """
-    name = models.CharField('Жанр', max_length=256,
+    name = models.CharField(max_length=256,
                             verbose_name='Название жанра')
     slug = models.SlugField(unique=True, max_length=50,
                             verbose_name='slug жанра')
@@ -33,14 +33,14 @@ class Genre(models.Model):
     class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
-        # добавил verbose_name и verbose_name_plural в Мета классе
+        # добавил verbose_name и verbose_name_plural в Мета классе и в поле
 
 
 class Title(models.Model):
     """Основное произведение, на который пишется отзыв.
     Наполнение доступно администратору.
     """
-    name = models.CharField('Название', max_length=256,
+    name = models.CharField(max_length=256,
                             verbose_name='Название произведения')
     year = models.IntegerField(
         default=2000,
@@ -61,7 +61,7 @@ class Title(models.Model):
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
-        # добавил verbose_name и verbose_name_plural в Мета классе
+        # добавил verbose_name и verbose_name_plural в Мета классе и в поле
 
 
 
