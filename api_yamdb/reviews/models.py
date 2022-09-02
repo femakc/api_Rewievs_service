@@ -12,7 +12,7 @@ class Category(models.Model):
                             verbose_name='Название категории')
     slug = models.SlugField(unique=True, max_length=50,
                             verbose_name='slug категории')
-    description = models.TextField(verbose_name='Описание категории')
+    description = models.TextField(verbose_name='Описание категории')# удалить это поле
 
     class Meta:
         verbose_name = 'Категория'
@@ -28,7 +28,7 @@ class Genre(models.Model):
                             verbose_name='Название жанра')
     slug = models.SlugField(unique=True, max_length=50,
                             verbose_name='slug жанра')
-    description = models.TextField(verbose_name='Описание жанра')
+    description = models.TextField(verbose_name='Описание жанра') # удалить это поле
 
     class Meta:
         verbose_name = 'Жанр'
@@ -52,7 +52,7 @@ class Title(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, related_name='titles',
         # сменил related_name
-        blank=True, null=True, verbose_name='Катеория произведения'
+        blank=True, null=True, verbose_name='Категория произведения'
     )
     genre = models.ManyToManyField(Genre, related_name='titles',
                                    verbose_name='Жанр произведения')
@@ -61,6 +61,7 @@ class Title(models.Model):
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
+
         # добавил verbose_name и verbose_name_plural в Мета классе и в поле
 
 
@@ -107,6 +108,7 @@ class Review(models.Model):
     )
 
     class Meta:
+        ordering = ['-pub_date']
         constraints = (
             models.UniqueConstraint(
                 fields=['title', 'author'], name='title_one_review'

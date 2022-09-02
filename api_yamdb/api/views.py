@@ -101,7 +101,9 @@ class UserVievSet(viewsets.ModelViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     """Обработчик самих произведений."""
-    queryset = Title.objects.all()
+    queryset = (Title.objects.prefetch_related('reviews').all().
+                annotate(rating=Avg('reviews__score')).
+                order_by('name')) #Изменен queryset
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
     pagination_class = LimitOffsetPagination
@@ -112,13 +114,13 @@ class TitleViewSet(viewsets.ModelViewSet):
             return TitleReadSerializer
         return TitleWriteSerializer
 
-    def get_queryset(self):
-        if self.action in ('list', 'retrieve'):
-            queryset = (Title.objects.prefetch_related('reviews').all().
-                        annotate(rating=Avg('reviews__score')).
-                        order_by('name'))
-            return queryset
-        return Title.objects.all()
+    # def get_queryset(self):
+    #     if self.action in ('list', 'retrieve'):
+    #         queryset = (Title.objects.prefetch_related('reviews').all().
+    #                     annotate(rating=Avg('reviews__score')).
+    #                     order_by('name'))
+    #         return queryset
+    #     return Title.objects.all()
 
 
 class GenreViewSet(GetPostDelMixin):
