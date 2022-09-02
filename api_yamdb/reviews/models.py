@@ -1,4 +1,5 @@
 from django.db import models
+from .validators import validate_year
 from users.models import User
 from api_yamdb.settings import SCORE_CHOICES
 
@@ -26,7 +27,10 @@ class Title(models.Model):
     Наполнение доступно администратору.
     """
     name = models.CharField('Название', max_length=200)
-    year = models.IntegerField(default=2000)
+    year = models.IntegerField(
+        default=2000,
+        validators=[validate_year]
+    )
     description = models.TextField(default='')
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, related_name='categories',
