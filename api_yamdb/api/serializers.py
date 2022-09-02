@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import User
 
-from .send_email import send_mesege
+from .send_email import send_message
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -39,7 +39,7 @@ class SignUpSerializer(serializers.ModelSerializer):
                 email=data['email']
             )
             if username.exists():
-                send_mesege(data['username'])
+                send_message(data['username'])
             else:
                 raise serializers.ValidationError(
                     "user не соответствует email"
