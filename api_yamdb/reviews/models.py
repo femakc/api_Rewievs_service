@@ -14,6 +14,9 @@ class Category(models.Model):
                             verbose_name='slug категории')
     description = models.TextField(verbose_name='Описание категории')# удалить это поле
 
+    def __str__(self):
+        return f'{self.name}'
+
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
@@ -29,6 +32,9 @@ class Genre(models.Model):
     slug = models.SlugField(unique=True, max_length=50,
                             verbose_name='slug жанра')
     description = models.TextField(verbose_name='Описание жанра') # удалить это поле
+
+    def __str__(self):
+        return f'{self.name},'
 
     class Meta:
         verbose_name = 'Жанр'
@@ -50,20 +56,23 @@ class Title(models.Model):
     description = models.TextField(default='',
                                    verbose_name='Описание произведения')
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, related_name='titles',
+        Category, on_delete=models.SET_NULL, related_name='titles_category',
         # сменил related_name
         blank=True, null=True, verbose_name='Категория произведения'
     )
-    genre = models.ManyToManyField(Genre, related_name='titles',
+    genre = models.ManyToManyField(Genre, related_name='titles_genre',
                                    verbose_name='Жанр произведения')
     # сменил related_name
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
 
-        # добавил verbose_name и verbose_name_plural в Мета классе и в поле
 
+        # добавил verbose_name и verbose_name_plural в Мета классе и в поле
 
 
 class Review(models.Model):
@@ -108,7 +117,7 @@ class Review(models.Model):
     )
 
     class Meta:
-        ordering = ['-pub_date']
+        ordering = ['-pub_date']# добавили сортировку
         constraints = (
             models.UniqueConstraint(
                 fields=['title', 'author'], name='title_one_review'
