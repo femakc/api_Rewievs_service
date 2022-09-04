@@ -5,8 +5,8 @@ from rest_framework import exceptions, serializers
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Comment, Genre, Review, Title
-from users.models import User
 
+from users.models import User
 from .send_email import send_message
 
 

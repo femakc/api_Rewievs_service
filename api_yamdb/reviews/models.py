@@ -1,8 +1,7 @@
 from django.db import models
+
 from users.models import User
-
 from api_yamdb.settings import SCORE_CHOICES
-
 from .validators import validate_year
 
 

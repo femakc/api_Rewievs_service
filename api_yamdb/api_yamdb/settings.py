@@ -130,16 +130,6 @@ ROLES_CHOICES = [
     (SUPERUSER, 'Суперюзер Django'),
 ]
 
-# ADMIN_ROLE = 'admin'
-# MODERATOR_ROLE = 'moderator'
-# ROLES = (
-#     ('anon', 'Аноним'),
-#     ('user', 'Аутентифицированный пользователь'),
-#     (MODERATOR_ROLE, 'Модератор'),
-#     (ADMIN_ROLE, 'Администратор'),
-#     ('superuser', 'Суперюзер Django'),
-# )
-
 ONE = 1
 TWO = 2
 THREE = 3
