@@ -116,15 +116,27 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-ADMIN_ROLE = 'admin'
-MODERATOR_ROLE = 'moderator'
-ROLES = (
-    ('anon', 'Аноним'),
-    ('user', 'Аутентифицированный пользователь'),
-    (MODERATOR_ROLE, 'Модератор'),
-    (ADMIN_ROLE, 'Администратор'),
-    ('superuser', 'Суперюзер Django'),
-)
+ANON = 'anon'
+USER = 'user'
+MODERATOR = 'moderator'
+ADMIN = 'admin'
+SUPERUSER = 'supeuser'
+ROLES_CHOICES = [
+    (ANON, 'Аноним'),
+    (USER, 'Аутентифицированный пользователь'),
+    (MODERATOR, 'Модератор'),
+    (ADMIN, 'Администратор'),
+    (SUPERUSER, 'Суперюзер Django'),
+]
+# ADMIN_ROLE = 'admin'
+# MODERATOR_ROLE = 'moderator'
+# ROLES = (
+#     ('anon', 'Аноним'),
+#     ('user', 'Аутентифицированный пользователь'),
+#     (MODERATOR_ROLE, 'Модератор'),
+#     (ADMIN_ROLE, 'Администратор'),
+#     ('superuser', 'Суперюзер Django'),
+# )
 
 SCORE_CHOICES = (
     (1, '1. Очень плохо. Не понравилось совсем.'),

@@ -56,10 +56,10 @@ class Title(models.Model):
     description = models.TextField(default='',
                                    verbose_name='Описание произведения')
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, related_name='titles_category',
+        Category, on_delete=models.SET_NULL, related_name='titles',
         blank=True, null=True, verbose_name='Категория произведения'
     )
-    genre = models.ManyToManyField(Genre, related_name='titles_genre',
+    genre = models.ManyToManyField(Genre, related_name='titles',
                                    verbose_name='Жанр произведения')
 
     def __str__(self):

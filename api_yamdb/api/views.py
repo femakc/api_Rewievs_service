@@ -89,9 +89,8 @@ class UserVievSet(viewsets.ModelViewSet):
             data=request.data,
             partial=True)
         if serializer.is_valid(raise_exception=True):
-            if request.user.role == 'admin':
-                serializer.save()
-
+            # if request.user.role == 'admin':                   # исправить на констату  
+            #     serializer.save()
             serializer.save(role=request.user.role)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)

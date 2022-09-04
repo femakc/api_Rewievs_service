@@ -1,10 +1,22 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
-from api_yamdb.settings import ROLES
+from api_yamdb.settings import ROLES_CHOICES
 
 
 class User(AbstractUser):
+    # ANON = 'anon'
+    # USER = 'user'
+    # MODERATOR = 'moderator'
+    # ADMIN = 'admin'
+    # SUPERUSER = 'supeuser'
+    # ROLES_CHOICES = [
+    #     (ANON, 'Аноним'),
+    #     (USER, 'Аутентифицированный пользователь'),
+    #     (MODERATOR, 'Модератор'),
+    #     (ADMIN, 'Администратор'),
+    #     (SUPERUSER, 'Суперюзер Django'),
+    # ]
     username = models.CharField(
         max_length=100,
         unique=True
@@ -24,7 +36,7 @@ class User(AbstractUser):
     )
     role = models.CharField(
         max_length=32,
-        choices=ROLES,
+        choices=ROLES_CHOICES,
         default='user',
         verbose_name='Роль пользователя',
         help_text='роль'
