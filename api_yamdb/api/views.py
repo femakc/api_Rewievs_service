@@ -1,4 +1,5 @@
 import uuid
+
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -87,10 +88,9 @@ class UserVievSet(viewsets.ModelViewSet):
             request.user,
             data=request.data,
             partial=True)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save(role=request.user.role)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(role=request.user.role)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TitleViewSet(viewsets.ModelViewSet):

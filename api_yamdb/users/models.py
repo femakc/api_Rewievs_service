@@ -5,18 +5,7 @@ from api_yamdb.settings import ROLES_CHOICES
 
 
 class User(AbstractUser):
-    # ANON = 'anon'
-    # USER = 'user'
-    # MODERATOR = 'moderator'
-    # ADMIN = 'admin'
-    # SUPERUSER = 'supeuser'
-    # ROLES_CHOICES = [
-    #     (ANON, 'Аноним'),
-    #     (USER, 'Аутентифицированный пользователь'),
-    #     (MODERATOR, 'Модератор'),
-    #     (ADMIN, 'Администратор'),
-    #     (SUPERUSER, 'Суперюзер Django'),
-    # ]
+
     username = models.CharField(
         max_length=100,
         unique=True
